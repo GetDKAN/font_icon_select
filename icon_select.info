@@ -1,0 +1,7 @@
+name = Adworkshop Icon Selection
+description = System for font based icon selection.
+core = 7.x
+version = "7.x-1.0"
+
+project = "icon_select"
+datestamp = "1403630486"
