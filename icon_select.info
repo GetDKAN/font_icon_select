@@ -1,4 +1,4 @@
-name = Adworkshop Icon Selection
+name = Icon Selection
 description = System for font based icon selection.
 core = 7.x
 version = "7.x-1.0"

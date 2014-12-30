@@ -6,8 +6,8 @@
  */
 function icon_select_permission(){
   return array(
-    'edit adw icons' => array(
-      'title' => t('Edit ADW Icon Settings'),
+    'administer icon select settings' => array(
+      'title' => t('Edit Icon Select Settings'),
     ),
   );
 }
@@ -37,12 +37,12 @@ function icon_select_menu() {
   $access_content = array('access content');
 
   $items['admin/config/media/icon_select_options'] = array(
-    'title' => 'Adworkshop Icon Selection Options',
+    'title' => 'Icon Select Options',
     'description' => 'Icon Selection Font Library Options',
     'type' => MENU_NORMAL_ITEM,
     'page callback' => 'icon_select_overview',
     'file' => 'icon_select.admin.inc',
-    'access arguments' => array('administer site configuration'),
+    'access arguments' => array('administer icon select settings'),
   );
 
   $items['admin/config/media/icon_select_options/overview'] = array(
@@ -56,7 +56,7 @@ function icon_select_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('icon_select_font_library_form', '0'),
     'file' => 'icon_select.admin.inc',
-    'access arguments' => array('administer site configuration'),
+    'access arguments' => array('administer icon select settings'),
   );
 
   //edit font library blacklist
@@ -65,7 +65,7 @@ function icon_select_menu() {
     'type' => MENU_CALLBACK,
     'page callback' => 'icon_select_font_settings',
     'file' => 'icon_select.admin.inc',
-    'access arguments' => array('administer site configuration'),
+    'access arguments' => array('administer icon select settings'),
   );
   // 'Edit' link for libraries.
   $items['admin/config/media/icon_select_options/%/edit'] = array(
@@ -73,7 +73,7 @@ function icon_select_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('icon_select_font_library_form', 4),
     'file' => 'icon_select.admin.inc',
-    'access arguments' => array('administer site configuration'),
+    'access arguments' => array('administer icon select settings'),
     'type' => MENU_CALLBACK,
   );
   //delete link for libraries.
@@ -83,7 +83,7 @@ function icon_select_menu() {
     'page callback' => 'icon_select_font_library_delete',
     'page arguments' => array(4),
     'file' => 'icon_select.admin.inc',
-    'access arguments' => array('administer site configuration'),
+    'access arguments' => array('administer icon select settings'),
   );
 
   return $items;
@@ -447,7 +447,7 @@ function icon_select_entity_info() {
   return array(
     'icon_select_font_library' => array(
       'label' => t('Font Library'),
-      'controller class' => 'AdwIconSelectControllerClass',
+      'controller class' => 'IconSelectControllerClass',
       'base table' => 'icon_select',
       'entity keys' => array(
         'id' => 'flid',
@@ -456,7 +456,7 @@ function icon_select_entity_info() {
   );
 }
 
-interface AdwIconSelectBasicControllerInterface
+interface IconSelectBasicControllerInterface
   extends DrupalEntityControllerInterface {
   public function create();
   public function save($entity);
@@ -464,11 +464,11 @@ interface AdwIconSelectBasicControllerInterface
 }
 
 /**
- * AdwIconSelectControllerClass extends DrupalDefaultEntityController.
+ * IconSelectControllerClass extends DrupalDefaultEntityController.
  */
-class AdwIconSelectControllerClass
+class IconSelectControllerClass
   extends DrupalDefaultEntityController
-  implements AdwIconSelectBasicControllerInterface {
+  implements IconSelectBasicControllerInterface {
 
   /**
    * Create and return a new entity_example_basic entity.

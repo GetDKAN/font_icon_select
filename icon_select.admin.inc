@@ -3,7 +3,7 @@
 
 /**
  * @file
- * Administration page callbacks for the adw_header_images module.
+ * Administration page callbacks for the icon_select module.
  */
 
 /*
