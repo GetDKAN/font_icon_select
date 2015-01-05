@@ -3,7 +3,7 @@
 
 /**
  * @file
- * Contains install and update functions for adw icon select module.
+ * Contains install and update functions for icon select module.
  */
 
 function icon_select_schema(){
