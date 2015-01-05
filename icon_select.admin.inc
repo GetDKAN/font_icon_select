@@ -21,7 +21,7 @@ function icon_select_overview(){
     foreach ($options as $id => $option){
       $rows[] = array(
         $option,
-        l('edit blacklist', 'admin/config/media/icon_select_options/font_options/'.$id),
+        l('edit blacklist', 'admin/config/media/icon_select_options/'.$id.'/global_blacklist'),
         l('edit font', 'admin/config/media/icon_select_options/'.$id.'/edit'),
         in_array($id, $suppress_delete) ? 'Font in use, delete disabled' : l('delete', 'admin/config/media/icon_select_options/'.$id.'/delete'),
       );
@@ -99,8 +99,6 @@ function icon_select_font_library_form($form, &$form_state, $entity) {
     );
   }
 
-  $form['#submit'][] = '_icon_select_font_library_form_submit';
-
   return $form;
 }
 
@@ -116,7 +114,7 @@ function icon_select_font_library_edit_delete($form, &$form_state){
 /*
  * Form submit function for icon_select_upload_library form
  */
-function _icon_select_font_library_form_submit($form, $form_state){
+function icon_select_font_library_form_submit($form, $form_state){
   if ($form_state['values']['flid'] == 0)$new_entity = entity_get_controller('icon_select_font_library')->create();
   else{
     $new_entity = entity_load('icon_select_font_library', array($form_state['values']['flid']));
@@ -151,44 +149,16 @@ function _icon_select_font_library_form_submit($form, $form_state){
       }
     }
   }
+  //send it back to the main select options page
+  $form_state['redirect'] = 'admin/config/media/icon_select_options';
+
   // Set a response to the user.
   drupal_set_message(t('The font library has been uploaded'));
 }
 
-/*
- * page callback for the font settings tab
- */
-function icon_select_font_settings($font_id = FALSE){
-  //no font name as yet, display links
-  $return_val = '';
-  $font_options = _icon_select_get_available_fonts();
-  $valid_font = TRUE;
+function icon_select_font_global_blacklist_settings_form($form, &$form_state, $font_id){
+  if ((string)(int)$font_id == $font_id) $font_id = (int)$font_id;
 
-  if (count($font_options) == 0){
-    $return_val .= t('No font libraries have been uploaded yet. Please '.l('click here', 'admin/config/media/icon_select_options/add').' to add one.');
-  }
-  else{
-    if (!$font_id || !isset($font_options[$font_id])){
-      $valid_font = FALSE;
-      //if font name then this is a bad selection
-      if ($font_id != FALSE)$return_val .= 'Invalid font selection. Please select a font from the list below in order to begin editing its options.<br />';
-    }
-
-    if (!$valid_font){
-      $return_val .= 'Select a font to edit:<br />';
-      foreach($font_options as $key => $value){
-        $return_val .= '<a href="/admin/config/media/icon_select_options/font_options/'.$key.'">'.ucfirst($value).'</a><br />';
-      }
-    }
-    else{
-      $return_val = drupal_get_form('icon_select_font_settings_generate_form', $font_options[$font_id], $font_id);
-    }
-  }
-
-  return $return_val;
-}
-
-function icon_select_font_settings_generate_form($form, &$form_state, $font_name, $font_id){
   $form = $defaults = array();
 
   //pull all the available icons for the font
@@ -241,12 +211,10 @@ function icon_select_font_settings_generate_form($form, &$form_state, $font_name
     '#value' => t('Submit'),
   );
 
-  $form['#submit'][] = 'icon_select_font_settings_generate_form_submit';
-
   return $form;
 }
 
-function icon_select_font_settings_generate_form_submit($form, &$form_state){
+function icon_select_font_global_blacklist_settings_form_submit($form, &$form_state){
 
   $selected_values = array();
   foreach($form_state['values']['font_suppression_options'] as $key => $value){
@@ -255,7 +223,7 @@ function icon_select_font_settings_generate_form_submit($form, &$form_state){
     }
   }
 
-  $form_state['redirect'] = 'admin/config/media/icon_select_options/font_options';
+  $form_state['redirect'] = 'admin/config/media/icon_select_options';
 
   $entity = entity_load('icon_select_font_library', array($form_state['values']['flid']));
   $entity = array_shift($entity);

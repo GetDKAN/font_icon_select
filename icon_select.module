@@ -44,7 +44,7 @@ function icon_select_menu() {
     'file' => 'icon_select.admin.inc',
     'access arguments' => array('administer icon select settings'),
   );
-
+  //default tab
   $items['admin/config/media/icon_select_options/overview'] = array(
     'title' => 'Uploaded Font Libraries',
     'type' => MENU_DEFAULT_LOCAL_TASK,
@@ -60,12 +60,13 @@ function icon_select_menu() {
   );
 
   //edit font library blacklist
-  $items['admin/config/media/icon_select_options/font_options'] = array(
-    'title' => 'Font Options',
-    'type' => MENU_CALLBACK,
-    'page callback' => 'icon_select_font_settings',
+  $items['admin/config/media/icon_select_options/%/global_blacklist'] = array(
+    'title' => 'Global Blacklist Selection',
+    'page arguments' => array('icon_select_font_global_blacklist_settings_form', 4),
+    'page callback' => 'drupal_get_form',
     'file' => 'icon_select.admin.inc',
     'access arguments' => array('administer icon select settings'),
+    'type' => MENU_CALLBACK,
   );
   // 'Edit' link for libraries.
   $items['admin/config/media/icon_select_options/%/edit'] = array(
