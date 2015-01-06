@@ -355,7 +355,7 @@ function icon_select_font_library_delete_submit($form, &$form_state){
 
   entity_get_controller('icon_select_font_library')->delete($entity);
 
-  $form_state['redirect'] = 'admin/config/media/icon_select_options/overview';
+  $form_state['redirect'] = 'admin/config/media/icon_select_options';
 }
 
 /*
