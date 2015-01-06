@@ -2,6 +2,26 @@
 // $Id: icon_select.module $
 
 /*
+ * implements hook_form_alter
+ *
+ * for debugging only - should be removed unless business logc is added
+ */
+function icon_select_form_alter(&$form, &$form_state, $form_id){
+	//drupal_set_message('<pre>'.print_r($form_id, 1).'</pre>');
+}
+
+//help with the field edit form here
+function icon_select_form_field_ui_field_edit_form_alter(&$form, &$form_state){
+	if ($form['#field']['type'] == 'icon_select_icon'){
+		//giving the default field fieldset attributes so it can collapse
+		$form['instance']['default_value_widget']['#collapsible'] = TRUE;
+		$form['instance']['default_value_widget']['#collapsed'] = TRUE;
+		$form['instance']['default_value_widget']['#pre_render'][] = 'form_pre_render_fieldset';
+		$form['instance']['default_value_widget']['#process'][] = 'form_process_fieldset';
+	}
+}
+
+/*
  * implements hook_permission
  */
 function icon_select_permission(){
@@ -157,6 +177,8 @@ function icon_select_field_settings_form($field, $instance, $has_data) {
     ),
   );
 
+/* * /
+	//not doing this here, do it on a field occurrence basis.
   //don't show the blacklist unless there is a font selected
   $form['font_blacklist'] = array(
     '#type' => 'checkboxes',
@@ -169,8 +191,9 @@ function icon_select_field_settings_form($field, $instance, $has_data) {
     '#prefix' => '<div class="ajax-target"></div>',
     '#suffix' => '</div>',
   );
+/* */
 
-  drupal_set_message('<pre>'.print_r($settings, 1).'</pre>');
+  //drupal_set_message('<pre>'.print_r($settings, 1).'</pre>');
 
   return $form;
 }
