@@ -200,6 +200,7 @@ function icon_select_font_global_blacklist_settings_form($form, &$form_state, $f
     }
 
   ", array('type'=>'inline','scope'=>'header'));
+
   $module_path = drupal_get_path('module', 'icon_select');
   drupal_add_css($module_path . '/icon_select.css');
   drupal_add_js($module_path . '/icon_select.js');
