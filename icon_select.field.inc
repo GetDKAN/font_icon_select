@@ -88,6 +88,7 @@ function icon_select_field_settings_form($field, $instance, $has_data) {
  */
 function icon_select_field_instance_settings_form($field, $instance) {
 	$settings = $instance['settings'];
+	drupal_set_message('<pre>'.print_r($settings, 1).'</pre>');
 	$font_id = $field['settings']['font'];
 	$form = array();
 	
@@ -121,7 +122,7 @@ function icon_select_field_instance_settings_form($field, $instance) {
 	$form['blacklist_fieldset']['blacklist'] = array(
 		'#type' => 'radios',
 		'#title' => 'Blacklist/Whitelist Select',
-		'#default_value' => $settings['blacklist'],
+		'#default_value' => $settings['blacklist_fieldset']['blacklist'],
 		'#options' => array(0 => t('Whitelist'), 1 => t('Blacklist')),
 		'#description' => t('Toggle the behavior of the Black/Whitelist selection below.  If you choose blacklist all icons not selected will be available to the user.  If you select Whitelist only the selected icons will be available to the user'),
 	);
@@ -130,14 +131,26 @@ function icon_select_field_instance_settings_form($field, $instance) {
     '#type' => 'checkboxes',
     '#title' => t('Black/Whitelist Icons for this Field Instance.'),
     '#options' => $available_icons,
-    '#default_value' => $settings['suppress'],
+    '#default_value' => $settings['blacklist_fieldset']['suppress'],
     '#attributes' => array(
       'class' => array('icon_select_options', 'blacklist'),
     ),
     '#theme' => 'icon_select_checkboxes',
+		'#element_validate' => array('_icon_select_field_instance_settings_form_validate'),
   );
-	
+		
 	return $form;
+}
+
+/**
+ * Validate function for the icon_select field instance form
+ */
+function _icon_select_field_instance_settings_form_validate(&$form, &$form_state) {
+	//drupal_set_message('<pre>'.print_r($form_state['values'], 1).'</pre>');
+	$suppress_settings = array_values(array_unique($form_state['values']['instance']['settings']['blacklist_fieldset']['suppress']));
+	$suppress_settings = array_filter($suppress_settings, function($i){return $i != '0';});
+	$form_state['values']['instance']['settings']['blacklist_fieldset']['suppress'] = $suppress_settings;
+	drupal_set_message('<pre>'.print_r($suppress_settings, 1).'</pre>');
 }
 
 /*
