@@ -137,6 +137,21 @@ function icon_select_field_instance_settings_form($field, $instance) {
     ),
     '#theme' => 'icon_select_checkboxes',
 		'#element_validate' => array('_icon_select_field_instance_settings_form_validate'),
+		//attach css to keep shift click selection from highlighting
+		'#attached' => array('css' => array(
+				array(
+					'type' => 'inline',
+					'data' => "
+						.form-item-instance-settings-blacklist-fieldset-suppress div.form-checkboxes{
+							-webkit-user-select: none; /* webkit (safari, chrome) browsers */
+							-moz-user-select: none; /* mozilla browsers */
+							-khtml-user-select: none; /* webkit (konqueror) browsers */
+							-ms-user-select: none; /* IE10+ */
+						}
+					",
+				),
+			),
+		),
   );
 		
 	return $form;
@@ -220,7 +235,7 @@ function icon_select_field_widget_form(&$form, &$form_state, $field, $instance, 
       $module_path = drupal_get_path('module', 'icon_select');
 
       $element += array(
-        '#attributes' => array('class' => array('icon_select_options', 'whitelist')),
+        '#attributes' => array('class' => array('icon_select_options', 'whitelist', 'default_options')),
         '#attached' => array(
           'js' => array(
             $module_path . '/icon_select.js',
