@@ -29,13 +29,12 @@ jQuery(document).ready(function(){
 });
 
 function disable_unchecked(parent){
-  console.log('disabling');
-  jQuery('div.selectionInner:not(.checked)', parent).parents('label').siblings('input').attr('disabled', 'disabled');
+  //switched from parents('label' to parent().parent()n because of a noticable speed increase
+	jQuery('div.selectionInner:not(.checked)', parent).parent().parent().siblings('input').attr('disabled', 'disabled');
   jQuery('div.selectionInner:not(.checked)', parent).addClass('disabled');
 }
 
 function enable_unchecked(parent){
-  console.log('enabling');
   jQuery('input.icon_select_options', parent).removeAttr('disabled');
   jQuery('.selectionInner', parent).removeClass('disabled');
 }
@@ -54,9 +53,9 @@ function default_options_onclick(e){
 				else if (cardinality <= jQuery('.default_options div.selectionInner.checked').length) disable_unchecked(jQuery('.default_options'));
 			}
 			else{
-				console.log('cardinality: '+cardinality);
+				//console.log('cardinality: '+cardinality);
 				jQuery('div.selectionInner', e.currentTarget).addClass('checked');
-				console.log('length: ' + jQuery('.default_options div.selectionInner.checked').length);
+				//console.log('length: ' + jQuery('.default_options div.selectionInner.checked').length);
 				if (cardinality > 1 && cardinality == jQuery('.default_options div.selectionInner.checked').length) disable_unchecked(jQuery('.default_options'));
 			}
 		}
@@ -84,19 +83,22 @@ function black_white_options_onclick(e){
 				//need the class for nextUntil, dom object doesnt work until 1.6
 				current.addClass('current');
 				rangeItems = previous.nextUntil('.current');
+				current.removeClass('current');
 			}
 		}
+		
+		if (addClass){
+			jQuery('div.selectionInner', rangeItems).addClass('checked');
+			jQuery('input', rangeItems).attr('checked', true);
+		}
+		else{
+			jQuery('div.selectionInner', rangeItems).removeClass('checked');
+			jQuery('input', rangeItems).attr('checked', false);
+		}
 	}
-	rangeItems.push(current[0]);
-	
-	if (addClass){
-		jQuery('div.selectionInner', rangeItems).addClass('checked');
-		jQuery('input', rangeItems).attr('checked', true);
-	}
-	else{
-		jQuery('div.selectionInner', rangeItems).removeClass('checked');
-		jQuery('input', rangeItems).attr('checked', false);
-	}
+
+	if (addClass) jQuery('div.selectionInner', current).addClass('checked');
+	else jQuery('div.selectionInner', current).removeClass('checked');
 	
 	//reset the 'current' selected item
 	jQuery('.icon_selection_outer_wrapper', container).removeClass('lastSelected');
