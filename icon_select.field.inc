@@ -62,24 +62,6 @@ function icon_select_field_settings_form($field, $instance, $has_data) {
     ),
   );
 
-/* * /
-	//not doing this here, do it on a field occurrence basis.
-  //don't show the blacklist unless there is a font selected
-  $form['font_blacklist'] = array(
-    '#type' => 'checkboxes',
-    '#title' => t('Select Icons that should not be available to the user.'),
-    '#options' => array(),
-    '#attributes' => array(
-      'class' => array('icon_select_options', 'blacklist'),
-    ),
-    '#theme' => 'icon_select_checkboxes',
-    '#prefix' => '<div class="ajax-target"></div>',
-    '#suffix' => '</div>',
-  );
-/* */
-
-  //drupal_set_message('<pre>'.print_r($settings, 1).'</pre>');
-
   return $form;
 }
 
@@ -88,7 +70,6 @@ function icon_select_field_settings_form($field, $instance, $has_data) {
  */
 function icon_select_field_instance_settings_form($field, $instance) {
 	$settings = $instance['settings'];
-	drupal_set_message('<pre>'.print_r($settings, 1).'</pre>');
 	$font_id = $field['settings']['font'];
 	$form = array();
 	
@@ -127,13 +108,15 @@ function icon_select_field_instance_settings_form($field, $instance) {
 		'#description' => t('Toggle the behavior of the Black/Whitelist selection below.  If you choose blacklist all icons not selected will be available to the user.  If you select Whitelist only the selected icons will be available to the user'),
 	);
 	
+	$extra_class = $settings['blacklist_fieldset']['blacklist'] == 1 ? 'blacklist' : 'whitelist';
+	
   $form['blacklist_fieldset']['suppress'] = array(
     '#type' => 'checkboxes',
     '#title' => t('Black/Whitelist Icons for this Field Instance.'),
     '#options' => $available_icons,
     '#default_value' => $settings['blacklist_fieldset']['suppress'],
     '#attributes' => array(
-      'class' => array('icon_select_options', 'blacklist'),
+      'class' => array('icon_select_options', $extra_class, 'icon_option_list_selection'),
     ),
     '#theme' => 'icon_select_checkboxes',
 		'#element_validate' => array('_icon_select_field_instance_settings_form_validate'),

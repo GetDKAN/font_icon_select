@@ -182,8 +182,24 @@ function icon_select_font_global_blacklist_settings_form($form, &$form_state, $f
     '#options' => $available_icons,
     '#default_value' => $defaults,
     '#attributes' => array(
-      'class' => array('icon_select_options', 'blacklist'),
+      'class' => array('icon_select_options', 'blacklist', 'icon_option_list_selection'),
     ),
+		//attach css to keep shift click selection from highlighting
+		'#attached' => array(
+			'css' => array(
+				array(
+					'type' => 'inline',
+					'data' => "
+						.icon_option_list_selection.form-checkboxes{
+							-webkit-user-select: none; /* webkit (safari, chrome) browsers */
+							-moz-user-select: none; /* mozilla browsers */
+							-khtml-user-select: none; /* webkit (konqueror) browsers */
+							-ms-user-select: none; /* IE10+ */
+						}
+					",
+				),
+			),
+		),
     '#theme' => 'icon_select_checkboxes',
   );
 

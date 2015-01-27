@@ -1,6 +1,10 @@
 jQuery(document).ready(function(){
 	//set default to unlimited
-  if (typeof Drupal.settings.icon_select == 'undefined') Drupal.settings.icon_select.cardinality = 0;
+  if (typeof Drupal.settings.icon_select == 'undefined'){
+		Drupal.settings.icon_select = {
+			cardinality : 0
+		}
+	}
 	
 	var cardinality = Drupal.settings.icon_select.cardinality;
 
@@ -10,7 +14,7 @@ jQuery(document).ready(function(){
 	//this is limited to the default options, as the black/whitelist doesnt care about the cardinality
   jQuery('div.icon_select_options.default_options label').bind('click', default_options_onclick);
 	//black/whitelist settings
-	jQuery('div#edit-instance-settings-blacklist-fieldset-suppress label').bind('click', black_white_options_onclick);
+	jQuery('div.icon_option_list_selection label').bind('click', black_white_options_onclick);
 	
 	jQuery('#edit-instance-settings-blacklist-fieldset-blacklist input').bind('click', updateDefaults)
 	
@@ -67,7 +71,7 @@ function default_options_onclick(e){
 }
 
 function black_white_options_onclick(e){
-	var container = jQuery('div#edit-instance-settings-blacklist-fieldset-suppress'),
+	var container = jQuery('div.icon_option_list_selection'),
 			current = jQuery(e.target).parents('.icon_selection_outer_wrapper'),
       previous = jQuery('.lastSelected', container),
       addClass = (previous.length && e.shiftKey ? jQuery('div.selectionInner', previous).hasClass('checked') : !jQuery('div.selectionInner', current).hasClass('checked')),
@@ -104,7 +108,7 @@ function black_white_options_onclick(e){
 	jQuery('.icon_selection_outer_wrapper', container).removeClass('lastSelected');
 	jQuery(current).addClass('lastSelected');
 	
-	updateDefaults();
+	if (jQuery('div#edit-instance-settings-blacklist-fieldset-suppress').length) updateDefaults();
 }
 
 /**
