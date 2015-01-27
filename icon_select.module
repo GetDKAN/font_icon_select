@@ -172,13 +172,37 @@ function icon_select_field_widget_error($element, $error, $form, &$form_state) {
 /**
  * Implements hook_options_list().
  */
-function icon_select_options_list($field, $defaults) {
-  //drupal_set_message('in hook options list');
+function icon_select_options_list($field, $instance, $entity_type, $entity) {
+/* * /
+	drupal_set_message('<pre>'.print_r($field, 1).'</pre>');
+	drupal_set_message('<pre>'.print_r($instance, 1).'</pre>');
+	drupal_set_message('in hook options list');
+/* */
+
+	//need to pull the defaults out of the instance array
+	//they live in $instance['default_value']
+	$defaults = array();
+	if(isset($instance['default_value'])){
+		foreach($instance['default_value'] as $key => $value){
+			$defaults[] = $value['value'];
+		}
+	}
+
   //need to pull the icons here...
   module_load_include('inc', 'icon_select', 'icon_select.admin');
 
   $available_fonts = _icon_select_get_available_fonts();
   $options = _icon_select_get_font_icons($field['settings']['font'], TRUE);
+	
+	//if this is an entity, restrict the options based on the field instance settings
+	if ($entity != NULL && $entity != ''){
+		if ($instance['settings']['blacklist_fieldset']['blacklist'] === 0){
+			$options = $instance['settings']['blacklist_fieldset']['suppress'];
+		}
+		else{
+			$options = array_diff($options, $instance['settings']['blacklist_fieldset']['suppress']);
+		}
+	}
 
   //drupal_set_message('<pre>'.print_r($defaults, 1).'</pre>');
 

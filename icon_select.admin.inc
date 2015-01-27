@@ -21,16 +21,16 @@ function icon_select_overview(){
     foreach ($options as $id => $option){
       $rows[] = array(
         $option,
-        l('edit blacklist', 'admin/config/content/icon_select_options/'.$id.'/global_blacklist'),
-        l('edit font', 'admin/config/content/icon_select_options/'.$id.'/edit'),
-        in_array($id, $suppress_delete) ? 'Font in use, delete disabled' : l('delete', 'admin/config/content/icon_select_options/'.$id.'/delete'),
+        l('edit blacklist', 'admin/config/content/icon_select_options/' . $id . '/global_blacklist'),
+        l('edit font', 'admin/config/content/icon_select_options/' . $id . '/edit'),
+        in_array($id, $suppress_delete) ? 'Font in use, delete disabled' : l('delete', 'admin/config/content/icon_select_options/' . $id . '/delete'),
       );
     }
 
     $headers = array('Font Title','Edit Font Blacklist','Edit Font Options','Delete');
     $return_val = theme('table', array('header' => $headers, 'rows' => $rows));
   }
-  else $return_val = t('No font libraries have been uploaded yet. Please '.l('click here', 'admin/config/content/icon_select_options/add').' to add one.');
+  else $return_val = t('No font libraries have been uploaded yet. Please ' . l('click here', 'admin/config/content/icon_select_options/add') . ' to add one.');
 
   return $return_val;
 }
@@ -77,7 +77,7 @@ function icon_select_font_library_form($form, &$form_state, $entity) {
       '#upload_location' => 'public://',
       '#upload_validators' => array(
         'file_validate_extensions' => array($ext),
-        'file_validate_size' => array(ini_get('post_max_size')*1024*1024),
+        'file_validate_size' => array(ini_get('post_max_size') * 1024 * 1024),
       ),
     );
   }
@@ -108,7 +108,7 @@ function icon_select_font_library_form($form, &$form_state, $entity) {
  * redirects form to delete form
  */
 function icon_select_font_library_edit_delete($form, &$form_state){
-  $form_state['redirect'] = 'admin/config/content/icon_select_options/'.$form_state['values']['flid'].'/delete';
+  $form_state['redirect'] = 'admin/config/content/icon_select_options/' . $form_state['values']['flid'] . '/delete';
 }
 
 /*
@@ -126,7 +126,7 @@ function icon_select_font_library_form_submit($form, $form_state){
   $font_files = array('eot','svg', 'ttf', 'woff');
   //run through and set all the fids
   foreach($font_files as $id => $ext){
-    $new_entity->{$ext.'_fid'} = $form_state['values']['font_file_'.$ext];
+    $new_entity->{$ext . '_fid'} = $form_state['values']['font_file_' . $ext];
   }
 
   //save the new entity, needs to happen here to set the flid
@@ -134,16 +134,16 @@ function icon_select_font_library_form_submit($form, $form_state){
 
   //add the file usage
   foreach($font_files as $id => $ext){
-    if ($form_state['values']['flid'] == 0 || $form_state['values']['font_file_'.$ext] != $form_state['values']['entity_presave']->{$ext.'_fid'}){
+    if ($form_state['values']['flid'] == 0 || $form_state['values']['font_file_' . $ext] != $form_state['values']['entity_presave']->{$ext . '_fid'}){
       //need to load the whole file to change it's status to permanent
-      $file = file_load($form_state['values']['font_file_'.$ext]);
+      $file = file_load($form_state['values']['font_file_' . $ext]);
       $file->status = FILE_STATUS_PERMANENT;
       file_save($file);
-      $new_entity->{$ext.'_fid'} = $file->fid;
+      $new_entity->{$ext . '_fid'} = $file->fid;
       file_usage_add($file, 'icon_select', 'icon_select_font_library', $new_entity->flid);
       //if this has an flid we need to remove the old file
       if ($form_state['values']['flid'] != 0){
-        $file = file_load($form_state['values']['entity_presave']->{$ext.'_fid'});
+        $file = file_load($form_state['values']['entity_presave']->{$ext . '_fid'});
         file_usage_delete($file, 'icon_select');
         file_delete($file);
       }
@@ -209,8 +209,8 @@ function icon_select_font_global_blacklist_settings_form($form, &$form_state, $f
   drupal_add_css("
     @font-face {
       font-family: 'icon_select_current_font';
-      src: url('".file_create_url($files[$entity->eot_fid]->uri)."');
-      src: url('".file_create_url($files[$entity->eot_fid]->uri)."?#iefix') format('embedded-opentype'), url('".file_create_url($files[$entity->woff_fid]->uri)."') format('woff'), url('".file_create_url($files[$entity->ttf_fid]->uri)."') format('truetype'), url('".file_create_url($files[$entity->svg_fid]->uri)."') format('svg');
+      src: url('" . file_create_url($files[$entity->eot_fid]->uri) . "');
+      src: url('" . file_create_url($files[$entity->eot_fid]->uri) . "?#iefix') format('embedded-opentype'), url('" . file_create_url($files[$entity->woff_fid]->uri) . "') format('woff'), url('" . file_create_url($files[$entity->ttf_fid]->uri) . "') format('truetype'), url('" . file_create_url($files[$entity->svg_fid]->uri) . "') format('svg');
       font-weight: normal;
       font-style: normal;
     }
@@ -295,7 +295,6 @@ function _icon_select_get_font_icons($font_id, $suppress_icons = FALSE){
 }
 
 function theme_icon_select_checkboxes($vars) {
-  //drupal_set_message('in theme_icon_select_checkboxes');
   $element = $vars['element'];
 
   // the selected keys from #options

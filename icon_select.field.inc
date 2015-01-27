@@ -148,7 +148,6 @@ function _icon_select_field_instance_settings_form_validate(&$form, &$form_state
 	$suppress_settings = array_values(array_unique($form_state['values']['instance']['settings']['blacklist_fieldset']['suppress']));
 	$suppress_settings = array_filter($suppress_settings, function($i){return $i != '0';});
 	$form_state['values']['instance']['settings']['blacklist_fieldset']['suppress'] = $suppress_settings;
-	drupal_set_message('<pre>'.print_r($suppress_settings, 1).'</pre>');
 }
 
 /*
@@ -186,14 +185,9 @@ function icon_select_field_widget_info() {
  * Implements hook_field_widget_form().
  */
 function icon_select_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
-  //drupal_set_message('inside icon_select_field_widget_form');
-
   switch ($instance['widget']['type']) {
 
     case 'icon_select_icon_widget':
-
-      //drupal_set_message('<pre>'.print_r($items, 1).'</pre>');
-
       $module_path = drupal_get_path('module', 'icon_select');
       //need to find the font name
       module_load_include('inc', 'icon_select', 'icon_select.admin');
@@ -216,6 +210,8 @@ function icon_select_field_widget_form(&$form, &$form_state, $field, $instance, 
       $files = file_load_multiple(array($entity->eot_fid, $entity->svg_fid, $entity->ttf_fid, $entity->woff_fid));
 
       $module_path = drupal_get_path('module', 'icon_select');
+			
+			$options = (array) module_invoke($field['module'], 'options_list', $field, $instance, $element['#entity_type'], $element['#entity']);
 
       $element += array(
         '#attributes' => array('class' => array('icon_select_options', 'whitelist', 'default_options')),
@@ -247,7 +243,7 @@ function icon_select_field_widget_form(&$form, &$form_state, $field, $instance, 
         '#value_key' => 'value',
         '#default_value' => $defaults,
         //there has to be a better way to do this...
-        '#options' => (array) module_invoke($field['module'], 'options_list', $field, $defaults),
+        '#options' => $options,
         // @TODO - add element validation
         '#element_validate' => array('options_field_widget_validate'),
         '#properties' => array(
