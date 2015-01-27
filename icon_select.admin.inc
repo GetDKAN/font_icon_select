@@ -21,16 +21,16 @@ function icon_select_overview(){
     foreach ($options as $id => $option){
       $rows[] = array(
         $option,
-        l('edit blacklist', 'admin/config/media/icon_select_options/'.$id.'/global_blacklist'),
-        l('edit font', 'admin/config/media/icon_select_options/'.$id.'/edit'),
-        in_array($id, $suppress_delete) ? 'Font in use, delete disabled' : l('delete', 'admin/config/media/icon_select_options/'.$id.'/delete'),
+        l('edit blacklist', 'admin/config/content/icon_select_options/'.$id.'/global_blacklist'),
+        l('edit font', 'admin/config/content/icon_select_options/'.$id.'/edit'),
+        in_array($id, $suppress_delete) ? 'Font in use, delete disabled' : l('delete', 'admin/config/content/icon_select_options/'.$id.'/delete'),
       );
     }
 
     $headers = array('Font Title','Edit Font Blacklist','Edit Font Options','Delete');
     $return_val = theme('table', array('header' => $headers, 'rows' => $rows));
   }
-  else $return_val = t('No font libraries have been uploaded yet. Please '.l('click here', 'admin/config/media/icon_select_options/add').' to add one.');
+  else $return_val = t('No font libraries have been uploaded yet. Please '.l('click here', 'admin/config/content/icon_select_options/add').' to add one.');
 
   return $return_val;
 }
@@ -44,14 +44,14 @@ function icon_select_font_library_form($form, &$form_state, $entity) {
   $form = array();
 
   //$entity is 0 when adding a new
-  if (!is_numeric($entity)) drupal_goto('admin/config/media/icon_select_options');
+  if (!is_numeric($entity)) drupal_goto('admin/config/content/icon_select_options');
   $form['flid'] = array(
     '#type' => 'value',
     '#value' => $entity,
   );
   if ($entity !== 0){
     $entity = entity_load('icon_select_font_library', array($entity));
-    if (!$entity || !count($entity))if (!is_numeric($entity)) drupal_goto('admin/config/media/icon_select_options');
+    if (!$entity || !count($entity))if (!is_numeric($entity)) drupal_goto('admin/config/content/icon_select_options');
     $entity = array_shift($entity);
 
     $form['entity_presave'] = array(
@@ -108,7 +108,7 @@ function icon_select_font_library_form($form, &$form_state, $entity) {
  * redirects form to delete form
  */
 function icon_select_font_library_edit_delete($form, &$form_state){
-  $form_state['redirect'] = 'admin/config/media/icon_select_options/'.$form_state['values']['flid'].'/delete';
+  $form_state['redirect'] = 'admin/config/content/icon_select_options/'.$form_state['values']['flid'].'/delete';
 }
 
 /*
@@ -150,7 +150,7 @@ function icon_select_font_library_form_submit($form, $form_state){
     }
   }
   //send it back to the main select options page
-  $form_state['redirect'] = 'admin/config/media/icon_select_options';
+  $form_state['redirect'] = 'admin/config/content/icon_select_options';
 
   // Set a response to the user.
   drupal_set_message(t('The font library has been uploaded'));
@@ -224,7 +224,7 @@ function icon_select_font_global_blacklist_settings_form_submit($form, &$form_st
     }
   }
 
-  $form_state['redirect'] = 'admin/config/media/icon_select_options';
+  $form_state['redirect'] = 'admin/config/content/icon_select_options';
 
   $entity = entity_load('icon_select_font_library', array($form_state['values']['flid']));
   $entity = array_shift($entity);
@@ -322,7 +322,7 @@ function icon_select_font_library_delete_form($form, &$form_state, $entity_id){
     '#weight' => 0,
   );
   $form['actions']['cancel'] = array(
-    '#markup' => l(t('Cancel'), 'admin/config/media/icon_select_options/'.$entity_id.'/edit'),
+    '#markup' => l(t('Cancel'), 'admin/config/content/icon_select_options/'.$entity_id.'/edit'),
     '#weight' => 1,
   );
 
@@ -332,7 +332,7 @@ function icon_select_font_library_delete_form($form, &$form_state, $entity_id){
 }
 
 function icon_select_font_library_delete($entity_id){
-  if (!is_numeric($entity_id)) drupal_goto('admin/config/media/icon_select_options');
+  if (!is_numeric($entity_id)) drupal_goto('admin/config/content/icon_select_options');
 
   $options = _icon_select_get_available_fonts();
   //not an option?  page not found
@@ -356,7 +356,7 @@ function icon_select_font_library_delete_submit($form, &$form_state){
 
   entity_get_controller('icon_select_font_library')->delete($entity);
 
-  $form_state['redirect'] = 'admin/config/media/icon_select_options';
+  $form_state['redirect'] = 'admin/config/content/icon_select_options';
 }
 
 /*
