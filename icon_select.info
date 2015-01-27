@@ -6,4 +6,4 @@ version = "7.x-0.1"
 project = "icon_select"
 datestamp = "1403630486"
 
-configure = admin/config/media/icon_select_options
+configure = admin/config/content/icon_select_options
