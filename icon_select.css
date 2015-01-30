@@ -84,3 +84,5 @@ label.selectionWrapper.hideLabels .label, div.label.hide{display:none}
 div.field-name-field-icon.invisible{display:none}
 
 .icon_select_options .form-item{padding:0px !important;}
+
+.icon_select_hidden_element{display:none}

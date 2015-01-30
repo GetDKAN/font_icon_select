@@ -26,10 +26,12 @@ function icon_select_field_info() {
 /* */
       // Support default token formatter for field tokens.
       'default_token_formatter' => 'icon_select_plain',
-			'instance_settings' => array(
-        'suppress' => array(),
-				//blacklist/whitelist boolean
-				'blacklist' => true,
+      'instance_settings' => array(
+        'blacklist_fieldset' => array(
+					'suppress' => array(),
+					//blacklist/whitelist boolean
+					'blacklist' => true,
+				),
       ),
     ),
   );
@@ -69,47 +71,47 @@ function icon_select_field_settings_form($field, $instance, $has_data) {
  * implements hook_instance_settings_form
  */
 function icon_select_field_instance_settings_form($field, $instance) {
-	$settings = $instance['settings'];
-	$font_id = $field['settings']['font'];
-	$form = array();
-	
-	//need to pull the icons here...
+  $settings = $instance['settings'];
+  $font_id = $field['settings']['font'];
+  $form = array();
+
+  //need to pull the icons here...
   module_load_include('inc', 'icon_select', 'icon_select.admin');
   $available_icons = _icon_select_get_font_icons($font_id);
-	
-	//grab the settings from the db
+
+  //grab the settings from the db
   $entity = entity_load('icon_select_font_library', array($font_id));
   $entity = array_shift($entity);
   $global_settings = unserialize($entity->settings);
   $global_suppression = gettype($global_settings['suppress']) == 'array' ? $global_settings['suppress'] : array();
-	//remove the global blacklisted items from the available icons array
-	foreach ($global_suppression as $key => $icon_key){
-		unset($available_icons[$icon_key]);
-	}
+  //remove the global blacklisted items from the available icons array
+  foreach ($global_suppression as $key => $icon_key){
+    unset($available_icons[$icon_key]);
+  }
 
   $form['flid'] = array(
     '#type' => 'value',
     '#value' => $font_id,
   );
-	
-	$form['blacklist_fieldset'] = array(
+
+  $form['blacklist_fieldset'] = array(
     '#type' => 'fieldset',
     '#title' => t('Whitelist/Blacklist Toggle'),
     '#group' => 'advanced',
-		'#collapsible' => TRUE,
-		'#collapsed' => TRUE,
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
   );
-	
-	$form['blacklist_fieldset']['blacklist'] = array(
-		'#type' => 'radios',
-		'#title' => 'Blacklist/Whitelist Select',
-		'#default_value' => $settings['blacklist_fieldset']['blacklist'],
-		'#options' => array(0 => t('Whitelist'), 1 => t('Blacklist')),
-		'#description' => t('Toggle the behavior of the Black/Whitelist selection below.  If you choose blacklist all icons not selected will be available to the user.  If you select Whitelist only the selected icons will be available to the user'),
-	);
-	
-	$extra_class = $settings['blacklist_fieldset']['blacklist'] == 1 ? 'blacklist' : 'whitelist';
-	
+
+  $form['blacklist_fieldset']['blacklist'] = array(
+    '#type' => 'radios',
+    '#title' => 'Blacklist/Whitelist Select',
+    '#default_value' => $settings['blacklist_fieldset']['blacklist'],
+    '#options' => array(0 => t('Whitelist'), 1 => t('Blacklist')),
+    '#description' => t('Toggle the behavior of the Black/Whitelist selection below.  If you choose blacklist all icons not selected will be available to the user.  If you select Whitelist only the selected icons will be available to the user'),
+  );
+
+  $extra_class = $settings['blacklist_fieldset']['blacklist'] == 1 ? 'blacklist' : 'whitelist';
+
   $form['blacklist_fieldset']['suppress'] = array(
     '#type' => 'checkboxes',
     '#title' => t('Black/Whitelist Icons for this Field Instance.'),
@@ -119,35 +121,34 @@ function icon_select_field_instance_settings_form($field, $instance) {
       'class' => array('icon_select_options', $extra_class, 'icon_option_list_selection'),
     ),
     '#theme' => 'icon_select_checkboxes',
-		'#element_validate' => array('_icon_select_field_instance_settings_form_validate'),
-		//attach css to keep shift click selection from highlighting
-		'#attached' => array('css' => array(
-				array(
-					'type' => 'inline',
-					'data' => "
-						.form-item-instance-settings-blacklist-fieldset-suppress div.form-checkboxes{
-							-webkit-user-select: none; /* webkit (safari, chrome) browsers */
-							-moz-user-select: none; /* mozilla browsers */
-							-khtml-user-select: none; /* webkit (konqueror) browsers */
-							-ms-user-select: none; /* IE10+ */
-						}
-					",
-				),
-			),
-		),
+    '#element_validate' => array('_icon_select_field_instance_settings_form_validate'),
+    //attach css to keep shift click selection from highlighting
+    '#attached' => array('css' => array(
+        array(
+          'type' => 'inline',
+          'data' => "
+            .form-item-instance-settings-blacklist-fieldset-suppress div.form-checkboxes{
+              -webkit-user-select: none; /* webkit (safari, chrome) browsers */
+              -moz-user-select: none; /* mozilla browsers */
+              -khtml-user-select: none; /* webkit (konqueror) browsers */
+              -ms-user-select: none; /* IE10+ */
+            }
+          ",
+        ),
+      ),
+    ),
   );
-		
-	return $form;
+
+  return $form;
 }
 
 /**
  * Validate function for the icon_select field instance form
  */
 function _icon_select_field_instance_settings_form_validate(&$form, &$form_state) {
-	//drupal_set_message('<pre>'.print_r($form_state['values'], 1).'</pre>');
-	$suppress_settings = array_values(array_unique($form_state['values']['instance']['settings']['blacklist_fieldset']['suppress']));
-	$suppress_settings = array_filter($suppress_settings, function($i){return $i != '0';});
-	$form_state['values']['instance']['settings']['blacklist_fieldset']['suppress'] = $suppress_settings;
+  $suppress_settings = array_values(array_unique($form_state['values']['instance']['settings']['blacklist_fieldset']['suppress']));
+  $suppress_settings = array_filter($suppress_settings, function($i){return $i != '0';});
+  $form_state['values']['instance']['settings']['blacklist_fieldset']['suppress'] = $suppress_settings;
 }
 
 /*
@@ -196,12 +197,16 @@ function icon_select_field_widget_form(&$form, &$form_state, $field, $instance, 
 
       $multiple = $field['cardinality'] > 1 || $field['cardinality'] == FIELD_CARDINALITY_UNLIMITED;
 
+			//drupal_set_message('<pre>'.print_r($instance, 1).'</pre>');
+			
       //need to use an array if this field allows multiple values
       if ($multiple) {
         $defaults = array();
         foreach($items as $key => $value)$defaults[$key] = $value['value'];
       }
       else $defaults = isset($items[$delta]) ? $items[$delta]['value'] : '';
+
+
 
       //pull the font entity info here
       $entity = entity_load('icon_select_font_library', array($field['settings']['font']));
@@ -210,9 +215,9 @@ function icon_select_field_widget_form(&$form, &$form_state, $field, $instance, 
       $files = file_load_multiple(array($entity->eot_fid, $entity->svg_fid, $entity->ttf_fid, $entity->woff_fid));
 
       $module_path = drupal_get_path('module', 'icon_select');
-			
+
       //there has to be a better way to do this...
-			$options = (array) module_invoke($field['module'], 'options_list', $field, $instance, $element['#entity_type'], $element['#entity']);
+      $options = (array) module_invoke($field['module'], 'options_list', $field, $instance, $element['#entity_type'], $element['#entity']);
 
       $element += array(
         '#attributes' => array('class' => array('icon_select_options', 'whitelist', 'icon_select_instance_options')),
@@ -252,14 +257,14 @@ function icon_select_field_widget_form(&$form, &$form_state, $field, $instance, 
           'strip_tags' => '',
           'optgroups' => '',
         ),
-    		'#theme' => 'icon_select_checkboxes',
+        '#theme' => 'icon_select_checkboxes',
       );
-			
-			if ($element['#entity'] == NULL || (is_string($element['#entity']) && trim($element['#entity']) == '')){
-				//instance settings specific js to deal with the extra defaults field
-				$element['#attached']['js'][] = $module_path . '/icon_select_instance_settings.js';
-			}
-			
+
+      if ($element['#entity'] == NULL || (is_string($element['#entity']) && trim($element['#entity']) == '')){
+        //instance settings specific js to deal with the extra defaults field
+        $element['#attached']['js'][] = $module_path . '/icon_select_instance_settings.js';
+      }
+
       break;
   }
 

@@ -10,18 +10,18 @@ require_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'icon_select') . '/ic
  * for debugging only - should be removed unless business logc is added
  */
 function icon_select_form_alter(&$form, &$form_state, $form_id){
-	//drupal_set_message('<pre>'.print_r($form_id, 1).'</pre>');
+  //drupal_set_message('<pre>'.print_r($form_id, 1).'</pre>');
 }
 
 //help with the field edit form here
 function icon_select_form_field_ui_field_edit_form_alter(&$form, &$form_state){
-	if ($form['#field']['type'] == 'icon_select_icon'){
-		//giving the default field fieldset attributes so it can collapse
-		$form['instance']['default_value_widget']['#collapsible'] = TRUE;
-		$form['instance']['default_value_widget']['#collapsed'] = TRUE;
-		$form['instance']['default_value_widget']['#pre_render'][] = 'form_pre_render_fieldset';
-		$form['instance']['default_value_widget']['#process'][] = 'form_process_fieldset';
-	}
+  if ($form['#field']['type'] == 'icon_select_icon'){
+    //giving the default field fieldset attributes so it can collapse
+    $form['instance']['default_value_widget']['#collapsible'] = TRUE;
+    $form['instance']['default_value_widget']['#collapsed'] = TRUE;
+    $form['instance']['default_value_widget']['#pre_render'][] = 'form_pre_render_fieldset';
+    $form['instance']['default_value_widget']['#process'][] = 'form_process_fieldset';
+  }
 }
 
 /*
@@ -174,37 +174,29 @@ function icon_select_field_widget_error($element, $error, $form, &$form_state) {
  */
 function icon_select_options_list($field, $instance, $entity_type, $entity) {
 /* * /
-	drupal_set_message('<pre>'.print_r($entity_type, 1).'</pre>');
-	drupal_set_message('<pre>'.print_r($entity, 1).'</pre>');
-	drupal_set_message('in hook options list');
+  drupal_set_message('<pre>'.print_r($entity_type, 1).'</pre>');
+  drupal_set_message('<pre>'.print_r($entity, 1).'</pre>');
+  drupal_set_message('in hook options list');
 /* */
+  //need to pull the icons here...
+  module_load_include('inc', 'icon_select', 'icon_select.admin');
 
-	//need to pull the defaults out of the instance array
-	//they live in $instance['default_value']
-	$defaults = array();
-	if(isset($instance['default_value'])){
-		foreach($instance['default_value'] as $key => $value){
-			$defaults[] = $value['value'];
-		}
-	}
-	
-	//need to pull the icons here...
-	module_load_include('inc', 'icon_select', 'icon_select.admin');
+  $available_fonts = _icon_select_get_available_fonts();
+  $options = _icon_select_get_font_icons($field['settings']['font'], TRUE);
 
-	$available_fonts = _icon_select_get_available_fonts();
-	$options = _icon_select_get_font_icons($field['settings']['font'], TRUE);
-	
-	//if this is an entity, restrict the options based on the field instance settings
-	if ($entity == NULL || $entity == '') return $options;
+  //if this is an entity, restrict the options based on the field instance settings
+  if ($entity == NULL || $entity == '') return $options;
 	
 	//drupal_set_message('<pre>'.print_r($instance, 1).'</pre>');
-	if ($instance['settings']['blacklist_fieldset']['blacklist'] == '0'){
-		$options = array();
-		foreach( $instance['settings']['blacklist_fieldset']['suppress'] as $key => $value) $options[$value] = '&#' . $value . ';';
-		return $options;
-	}
-	
-	return array_diff($options, $instance['settings']['blacklist_fieldset']['suppress']);	
+  if ($instance['settings']['blacklist_fieldset']['blacklist'] == '0'){
+    $options = array();
+    foreach( $instance['settings']['blacklist_fieldset']['suppress'] as $key => $value) $options[$value] = '&#' . $value . ';';
+    return $options;
+  }
+	//set it up for the array diff
+	foreach( $instance['settings']['blacklist_fieldset']['suppress'] as $key => $value) $instance['settings']['blacklist_fieldset']['suppress'][$key] = '&#' . $value . ';';
+
+  return array_diff($options, $instance['settings']['blacklist_fieldset']['suppress']);
 }
 
 function icon_select_field_widget_form_alter(&$element, &$form_state, $context){

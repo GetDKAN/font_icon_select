@@ -184,22 +184,22 @@ function icon_select_font_global_blacklist_settings_form($form, &$form_state, $f
     '#attributes' => array(
       'class' => array('icon_select_options', 'blacklist', 'icon_option_list_selection'),
     ),
-		//attach css to keep shift click selection from highlighting
-		'#attached' => array(
-			'css' => array(
-				array(
-					'type' => 'inline',
-					'data' => "
-						.icon_option_list_selection.form-checkboxes{
-							-webkit-user-select: none; /* webkit (safari, chrome) browsers */
-							-moz-user-select: none; /* mozilla browsers */
-							-khtml-user-select: none; /* webkit (konqueror) browsers */
-							-ms-user-select: none; /* IE10+ */
-						}
-					",
-				),
-			),
-		),
+    //attach css to keep shift click selection from highlighting
+    '#attached' => array(
+      'css' => array(
+        array(
+          'type' => 'inline',
+          'data' => "
+            .icon_option_list_selection.form-checkboxes{
+              -webkit-user-select: none; /* webkit (safari, chrome) browsers */
+              -moz-user-select: none; /* mozilla browsers */
+              -khtml-user-select: none; /* webkit (konqueror) browsers */
+              -ms-user-select: none; /* IE10+ */
+            }
+          ",
+        ),
+      ),
+    ),
     '#theme' => 'icon_select_checkboxes',
   );
 
@@ -296,17 +296,20 @@ function _icon_select_get_font_icons($font_id, $suppress_icons = FALSE){
 
 function theme_icon_select_checkboxes($vars) {
   $element = $vars['element'];
-	
+
   // the selected keys from #options
   $selected_options = empty($element['#value']) ? (isset($element['#default_value']) ? $element['#default_value'] : array()) : $element['#value'];
 
+	$element['#default_value'] = is_array($element['#default_value']) ? $element['#default_value'] : array($element['#default_value']);
+
   $output = array();
+	
   foreach ($element['#options'] as $key => $value) {
 
     $field = '<input type="checkbox" '
           . 'name="' . $element['#name'] . '[]" '    // brackets are key -- just like select
           . 'value="' . $key . '" '
-          . 'id="' . $key . '" '
+          . 'id="' . $element['#id'] . '-' . $key . '" '
           . (in_array($key, $element['#default_value']) ? 'checked="checked" ' : '') . ' />';
 
     $current_element = array(
@@ -314,6 +317,7 @@ function theme_icon_select_checkboxes($vars) {
       'value' => $value,
       'field' => $field,
       'checked' => in_array($key, $element['#default_value']),
+			'element_id' => $element['#id'],
     );
     $output[] = theme(array('icon_select_checkbox'), array('element' => $current_element));
   }
