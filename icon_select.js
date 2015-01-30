@@ -10,7 +10,48 @@ var cardinality = Drupal.settings.icon_select.cardinality;
 jQuery(document).ready(function(){
 	//black/whitelist settings
 	jQuery('div.icon_option_list_selection label').bind('click', black_white_options_onclick);
+	jQuery('div.icon_select_instance_options label').bind('click', default_options_onclick);
 });
+
+function disable_unchecked(parent){
+  //switched from parents('label') to parent().parent() because of a noticable speed increase
+	jQuery('div.selectionInner:not(.checked)', parent).parent().parent().siblings('input').attr('disabled', 'disabled');
+  jQuery('div.selectionInner:not(.checked)', parent).addClass('disabled');
+	return true;
+}
+
+function enable_unchecked(parent){
+  jQuery('input.icon_select_options', parent).removeAttr('disabled');
+  jQuery('.selectionInner', parent).removeClass('disabled');
+	return true;
+}
+
+function default_options_onclick(e){
+	var cardinality = Drupal.settings.icon_select.cardinality;
+			
+	if (jQuery('.selectionInner', e.currentTarget).hasClass('disabled')) return false;
+
+	if (cardinality == 1){
+		jQuery('div.selectionInner').removeClass('checked');
+		jQuery('div.selectionInner', e.currentTarget).addClass('checked');
+
+		return true;
+	}
+
+	if (jQuery('div.checked', e.currentTarget).length === 1){
+		jQuery('div.selectionInner', e.currentTarget).removeClass('checked');
+		//it is possible for the cardinality to be lower than the number of selected options
+		//this can happen it the cardinality is reduced without first reducing the selected defaults
+		if (cardinality == 0 || cardinality > jQuery('.icon_select_instance_options div.selectionInner.checked').length) return enable_unchecked(jQuery('.icon_select_instance_options'));
+		//if we have too many checked still we need to disable the item that was just unchecked
+		else if (cardinality <= jQuery('.icon_select_instance_options div.selectionInner.checked').length) return disable_unchecked(jQuery('.icon_select_instance_options'));
+	}
+	else{
+		jQuery('div.selectionInner', e.currentTarget).addClass('checked');
+		if (cardinality > 1 && cardinality == jQuery('.icon_select_instance_options div.selectionInner.checked').length) return disable_unchecked(jQuery('.icon_select_instance_options'));
+		return true;
+	}
+}
 
 function black_white_options_onclick(e){
 	var container = jQuery('div.icon_option_list_selection'),
