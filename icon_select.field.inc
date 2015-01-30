@@ -215,7 +215,7 @@ function icon_select_field_widget_form(&$form, &$form_state, $field, $instance, 
 			$options = (array) module_invoke($field['module'], 'options_list', $field, $instance, $element['#entity_type'], $element['#entity']);
 
       $element += array(
-        '#attributes' => array('class' => array('icon_select_options', 'whitelist', 'default_options')),
+        '#attributes' => array('class' => array('icon_select_options', 'whitelist', 'default_options', 'icon_option_list_selection')),
         '#attached' => array(
           'js' => array(
             $module_path . '/icon_select.js',
@@ -251,7 +251,8 @@ function icon_select_field_widget_form(&$form, &$form_state, $field, $instance, 
           'empty_option' => 'option_none',
           'strip_tags' => '',
           'optgroups' => '',
-        )
+        ),
+    		'#theme' => 'icon_select_checkboxes',
       );
 			
 			if ($element['#entity'] == NULL || (is_string($element['#entity']) && trim($element['#entity']) == '')){

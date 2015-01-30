@@ -195,29 +195,16 @@ function icon_select_options_list($field, $instance, $entity_type, $entity) {
 	$options = _icon_select_get_font_icons($field['settings']['font'], TRUE);
 	
 	//if this is an entity, restrict the options based on the field instance settings
-	if ($entity != NULL && $entity != ''){
-		//drupal_set_message('<pre>'.print_r($instance, 1).'</pre>');
-		if ($instance['settings']['blacklist_fieldset']['blacklist'] == '0'){
-			$options = array();
-			foreach( $instance['settings']['blacklist_fieldset']['suppress'] as $key => $value) $options[$value] = '&#' . $value . ';';
-		}
-		else{
-			$options = array_diff($options, $instance['settings']['blacklist_fieldset']['suppress']);
-		}
+	if ($entity == NULL || $entity == '') return $options;
+	
+	//drupal_set_message('<pre>'.print_r($instance, 1).'</pre>');
+	if ($instance['settings']['blacklist_fieldset']['blacklist'] == '0'){
+		$options = array();
+		foreach( $instance['settings']['blacklist_fieldset']['suppress'] as $key => $value) $options[$value] = '&#' . $value . ';';
+		return $options;
 	}
-
-  foreach ($options as $key => &$value){
-    $value = '
-      <div class="selectionOuter">
-        <div class="selectionInner'.($key == $defaults || (is_array($defaults) && in_array($key, $defaults)) ? ' checked' : '').'">
-          <div class="selection">'.$value.'</div>
-        </div>
-      </div>
-      <div class="label hide">'.$key.'</div>
-    ';
-  }
-
-  return $options;
+	
+	return array_diff($options, $instance['settings']['blacklist_fieldset']['suppress']);	
 }
 
 function icon_select_field_widget_form_alter(&$element, &$form_state, $context){

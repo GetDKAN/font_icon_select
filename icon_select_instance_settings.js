@@ -73,7 +73,7 @@ function updateDefaults(){
 			
 	//grab the items selected in the black/white list
 	selected.each(function(){
-		selectedValues.push(jQuery(this).parents('.selectionOuter').siblings('.label').html())
+		selectedValues.push(jQuery(this).parents('label').html())
 	})
 		
 	//this is a blacklist
@@ -81,7 +81,7 @@ function updateDefaults(){
 		jQuery('#edit-instance-settings-blacklist-fieldset-suppress').removeClass('whitelist').addClass('blacklist')
 		jQuery('.default_options .form-item').show();
 		selected.each(function(){
-			jQuery('.default_options input[value="' + jQuery(this).parents('.selectionOuter').siblings('.label').html() + '"]').parent().hide()
+			jQuery('.default_options input[value="' + jQuery(this).parents('label').html() + '"]').parent().hide()
 		})
 	}
 	//otherwise it is a whitelist
@@ -89,7 +89,7 @@ function updateDefaults(){
 		jQuery('#edit-instance-settings-blacklist-fieldset-suppress').removeClass('blacklist').addClass('whitelist')
 		jQuery('.default_options .form-item').hide();
 		selected.each(function(){
-			jQuery('.default_options input[value="' + jQuery(this).parents('.selectionOuter').siblings('.label').html() + '"]').parent().show()
+			jQuery('.default_options input[value="' + jQuery(this).parents('label').html() + '"]').parent().show()
 		})
 	}
 	

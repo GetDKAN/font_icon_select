@@ -296,7 +296,7 @@ function _icon_select_get_font_icons($font_id, $suppress_icons = FALSE){
 
 function theme_icon_select_checkboxes($vars) {
   $element = $vars['element'];
-
+	
   // the selected keys from #options
   $selected_options = empty($element['#value']) ? (isset($element['#default_value']) ? $element['#default_value'] : array()) : $element['#value'];
 
@@ -307,8 +307,7 @@ function theme_icon_select_checkboxes($vars) {
           . 'name="' . $element['#name'] . '[]" '    // brackets are key -- just like select
           . 'value="' . $key . '" '
           . 'id="' . $key . '" '
-          . (in_array($key, $element['#default_value']) ? 'checked="checked" ' : '')
-          . drupal_attributes($element['#attributes']) . ' />';
+          . (in_array($key, $element['#default_value']) ? 'checked="checked" ' : '') . ' />';
 
     $current_element = array(
       'key' => $key,
