@@ -211,6 +211,7 @@ function icon_select_field_widget_form(&$form, &$form_state, $field, $instance, 
 
       $module_path = drupal_get_path('module', 'icon_select');
 			
+      //there has to be a better way to do this...
 			$options = (array) module_invoke($field['module'], 'options_list', $field, $instance, $element['#entity_type'], $element['#entity']);
 
       $element += array(
@@ -242,7 +243,6 @@ function icon_select_field_widget_form(&$form, &$form_state, $field, $instance, 
         '#type' => $multiple ? 'checkboxes' : 'radios',
         '#value_key' => 'value',
         '#default_value' => $defaults,
-        //there has to be a better way to do this...
         '#options' => $options,
         // @TODO - add element validation
         '#element_validate' => array('options_field_widget_validate'),
@@ -253,6 +253,12 @@ function icon_select_field_widget_form(&$form, &$form_state, $field, $instance, 
           'optgroups' => '',
         )
       );
+			
+			if ($element['#entity'] == NULL || (is_string($element['#entity']) && trim($element['#entity']) == '')){
+				//instance settings specific js to deal with the extra defaults field
+				$element['#attached']['js'][] = $module_path . '/icon_select_instance_settings.js';
+			}
+			
       break;
   }
 
