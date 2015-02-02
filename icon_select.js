@@ -29,7 +29,7 @@ function enable_unchecked(parent){
 function default_options_onclick(e){
   var cardinality = Drupal.settings.icon_select.cardinality;
 
-	if (typeof console.log == "function")console.log('in default options onclick')
+  if (typeof console.log == "function")console.log('in default options onclick')
 
   if (jQuery('.selectionInner', e.currentTarget).hasClass('disabled')) return false;
 

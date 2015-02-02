@@ -27,8 +27,8 @@ jQuery(document).ready(function(){
  **/
 function updateDefaults(){
   var whitelist = jQuery('div#edit-instance-settings-blacklist-fieldset-suppress .checked'),
-			blacklist = jQuery('div#edit-instance-settings-blacklist-fieldset-suppress .selectionInner:not(.checked)');
-	
+      blacklist = jQuery('div#edit-instance-settings-blacklist-fieldset-suppress .selectionInner:not(.checked)');
+
 
   //this is a blacklist
   if (jQuery('#edit-instance-settings-blacklist-fieldset-blacklist-1:checked').length){
@@ -47,7 +47,7 @@ function updateDefaults(){
     })
   }
 
-	//uncheck all hidden boxes
+  //uncheck all hidden boxes
   jQuery('.icon_select_instance_options .icon_selection_outer_wrapper.icon_select_hidden_element .checked').click();
 
   if (Drupal.settings.icon_select.cardinality != 1 && Drupal.settings.icon_select.cardinality <= jQuery('.icon_select_instance_options .checked').length) disable_unchecked(jQuery('.icon_select_instance_options'))

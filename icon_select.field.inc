@@ -28,10 +28,10 @@ function icon_select_field_info() {
       'default_token_formatter' => 'icon_select_plain',
       'instance_settings' => array(
         'blacklist_fieldset' => array(
-					'suppress' => array(),
-					//blacklist/whitelist boolean
-					'blacklist' => true,
-				),
+          'suppress' => array(),
+          //blacklist/whitelist boolean
+          'blacklist' => true,
+        ),
       ),
     ),
   );
@@ -197,8 +197,8 @@ function icon_select_field_widget_form(&$form, &$form_state, $field, $instance, 
 
       $multiple = $field['cardinality'] > 1 || $field['cardinality'] == FIELD_CARDINALITY_UNLIMITED;
 
-			//drupal_set_message('<pre>'.print_r($instance, 1).'</pre>');
-			
+      //drupal_set_message('<pre>'.print_r($instance, 1).'</pre>');
+
       //need to use an array if this field allows multiple values
       if ($multiple) {
         $defaults = array();
@@ -313,8 +313,7 @@ function icon_select_field_formatter_view($entity_type, $entity, $field, $instan
       foreach ($items as $delta => $item) {
         if ($item['access']) {
           $result[$delta] = array(
-            '#markup' => drupal_html_to_text(check_plain('&#'.$item['value'].';')),
-            '#prefix' => '<span class="icon_select_'.$field['settings']['font'].'">',
+            '#prefix' => '<span class="icon-select-' . $field['settings']['font'] . ' icon-select-' . $field['settings']['font'] . '-' . substr($item['value'], 1) .'">',
             '#suffix' => '</span>',
           );
         }

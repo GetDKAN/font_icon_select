@@ -186,21 +186,17 @@ function icon_select_options_list($field, $instance, $entity_type, $entity) {
 
   //if this is an entity, restrict the options based on the field instance settings
   if ($entity == NULL || $entity == '') return $options;
-	
-	//drupal_set_message('<pre>'.print_r($instance, 1).'</pre>');
+
+  //drupal_set_message('<pre>'.print_r($instance, 1).'</pre>');
   if ($instance['settings']['blacklist_fieldset']['blacklist'] == '0'){
     $options = array();
     foreach( $instance['settings']['blacklist_fieldset']['suppress'] as $key => $value) $options[$value] = '&#' . $value . ';';
     return $options;
   }
-	//set it up for the array diff
-	foreach( $instance['settings']['blacklist_fieldset']['suppress'] as $key => $value) $instance['settings']['blacklist_fieldset']['suppress'][$key] = '&#' . $value . ';';
+  //set it up for the array diff
+  foreach( $instance['settings']['blacklist_fieldset']['suppress'] as $key => $value) $instance['settings']['blacklist_fieldset']['suppress'][$key] = '&#' . $value . ';';
 
   return array_diff($options, $instance['settings']['blacklist_fieldset']['suppress']);
-}
-
-function icon_select_field_widget_form_alter(&$element, &$form_state, $context){
-  //drupal_set_message('<pre>'.print_r($element, 1).'</pre>');
 }
 
 /*
@@ -212,23 +208,9 @@ function icon_select_preprocess_html($vars){
   $available_fonts = _icon_select_get_available_fonts();
   $css_to_print = '';
   foreach ($available_fonts as $key => $value){
-    $entity = entity_load('icon_select_font_library', array($key));
-    $entity = array_shift($entity);
-    //get the font file info here
-    $files = file_load_multiple(array($entity->eot_fid, $entity->svg_fid, $entity->ttf_fid, $entity->woff_fid));
-
-    $css_to_print .= "
-      @font-face {
-        font-family: 'icon_select_".$key."';
-        src: url('".file_create_url($files[$entity->eot_fid]->uri)."');
-        src: url('".file_create_url($files[$entity->eot_fid]->uri)."?#iefix') format('embedded-opentype'), url('".file_create_url($files[$entity->woff_fid]->uri)."') format('woff'), url('".file_create_url($files[$entity->ttf_fid]->uri)."') format('truetype'), url('".file_create_url($files[$entity->svg_fid]->uri)."') format('svg');
-        font-weight: normal;
-        font-style: normal;
-      }
-      span.icon_select_".$key."{font-family: 'icon_select_".$key."';}
-    ";
+    //this file is generated on save of the fonts in the _icon_select_generate_general_css function located in icon_select.admin.inc
+    drupal_add_css('public://icon-select-general-generated-' . $key . '.css', array('type' => 'file', 'preprocess' => TRUE));
   }
-  drupal_add_css($css_to_print, array('type' => 'inline', 'preprocess' => TRUE));
 }
 
 /**

@@ -152,8 +152,58 @@ function icon_select_font_library_form_submit($form, $form_state){
   //send it back to the main select options page
   $form_state['redirect'] = 'admin/config/content/icon_select_options';
 
+  _icon_select_generate_general_css($new_entity);
+
   // Set a response to the user.
   drupal_set_message(t('The font library has been uploaded'));
+}
+
+/**
+ * helper function to generate a css file that will apply the correct font and icon to generated content
+ **/
+function _icon_select_generate_general_css($fl_entity){
+  //drop the old file if one exists
+  if ($fl_entity->general_generated_fid != 0 && $fl_entity->general_generated_fid != ''){
+    $file = file_load($fl_entity->general_generated_fid);
+    file_usage_delete($file, 'icon_select');
+    file_delete($file);
+  }
+
+  //grab the options
+  $font_options = _icon_select_get_font_icons($fl_entity->flid);
+
+  $file_contents = '';
+
+  //add the font family
+  $files = file_load_multiple(array($fl_entity->eot_fid, $fl_entity->svg_fid, $fl_entity->ttf_fid, $fl_entity->woff_fid));
+
+  $file_contents .= "
+    @font-face {
+      font-family: 'icon_select_" . $fl_entity->flid . "';
+      src: url('" . file_create_url($files[$fl_entity->eot_fid]->uri) . "');
+      src: url('" . file_create_url($files[$fl_entity->eot_fid]->uri) . "?#iefix') format('embedded-opentype'),
+           url('" . file_create_url($files[$fl_entity->woff_fid]->uri) . "') format('woff'),
+           url('" . file_create_url($files[$fl_entity->ttf_fid]->uri) . "') format('truetype'),
+           url('" . file_create_url($files[$fl_entity->svg_fid]->uri) . "') format('svg');
+      font-weight: normal;
+      font-style: normal;
+    }
+    .icon-select-" . $fl_entity->flid . "{font-family: 'icon_select_" . $fl_entity->flid . "'}
+  ";
+
+  //parse options ad put togethor css
+  foreach ($font_options as $key => $value){
+    //drop the x off the front of the key
+    $key = substr($key, 1);
+    $file_contents .= '.icon-select-' . $fl_entity->flid . '-' . $key . ':before{content:"\\' . $key . '"}';
+  }
+  $generated_font_file = file_save_data($file_contents, 'public://icon-select-general-generated-' . $fl_entity->flid . '.css', FILE_EXISTS_REPLACE);
+
+  //attach the new file to the fl
+  $fl_entity->general_generated_fid = $generated_font_file->fid;
+  file_usage_add($generated_font_file, 'icon_select', 'icon_select_font_library', $fl_entity->flid);
+
+  entity_get_controller('icon_select_font_library')->save($fl_entity);
 }
 
 function icon_select_font_global_blacklist_settings_form($form, &$form_state, $font_id){
@@ -300,10 +350,10 @@ function theme_icon_select_checkboxes($vars) {
   // the selected keys from #options
   $selected_options = empty($element['#value']) ? (isset($element['#default_value']) ? $element['#default_value'] : array()) : $element['#value'];
 
-	$element['#default_value'] = is_array($element['#default_value']) ? $element['#default_value'] : array($element['#default_value']);
+  $element['#default_value'] = is_array($element['#default_value']) ? $element['#default_value'] : array($element['#default_value']);
 
   $output = array();
-	
+
   foreach ($element['#options'] as $key => $value) {
 
     $field = '<input type="checkbox" '
@@ -317,7 +367,7 @@ function theme_icon_select_checkboxes($vars) {
       'value' => $value,
       'field' => $field,
       'checked' => in_array($key, $element['#default_value']),
-			'element_id' => $element['#id'],
+      'element_id' => $element['#id'],
     );
     $output[] = theme(array('icon_select_checkbox'), array('element' => $current_element));
   }
