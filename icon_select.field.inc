@@ -27,6 +27,9 @@ function icon_select_field_info() {
       // Support default token formatter for field tokens.
       'default_token_formatter' => 'icon_select_plain',
       'instance_settings' => array(
+        //text processing allows us to use the default text formatter
+        //without it we get an undefined error
+        'text_processing' => 0,
         'blacklist_fieldset' => array(
           'suppress' => array(),
           //blacklist/whitelist boolean
