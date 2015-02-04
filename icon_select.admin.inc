@@ -163,7 +163,7 @@ function icon_select_font_library_form_submit($form, $form_state){
  **/
 function _icon_select_generate_general_css($fl_entity){
   //drop the old file if one exists
-  if ($fl_entity->general_generated_fid != 0 && $fl_entity->general_generated_fid != ''){
+  if (isset($fl_entity->general_generated_fid) && $fl_entity->general_generated_fid != 0 && $fl_entity->general_generated_fid != ''){
     $file = file_load($fl_entity->general_generated_fid);
     file_usage_delete($file, 'icon_select');
     file_delete($file);
