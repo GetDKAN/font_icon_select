@@ -313,6 +313,7 @@ function _icon_select_get_available_fonts(){
 }
 
 function _icon_select_get_font_icons($font_id, $suppress_icons = FALSE){
+  //drupal_set_message('in the _icon_select_get_font_icons function');
   $icon_options = array();
 
   //suppression array
@@ -345,6 +346,7 @@ function _icon_select_get_font_icons($font_id, $suppress_icons = FALSE){
 }
 
 function theme_icon_select_checkboxes($vars) {
+  //drupal_set_message('in the theme_icon_select_checkboxes function');
   $element = $vars['element'];
 
   // the selected keys from #options
@@ -431,6 +433,7 @@ function icon_select_font_library_delete_submit($form, &$form_state){
  * helper function that returns all font libraries being used in icon select fields
  */
 function _icon_select_get_field_instances(){
+  //drupal_set_message('in the _icon_select_get_field_instances function');
   $suppress_delete = array();
   $instances = db_query('
     SELECT field_name, data
