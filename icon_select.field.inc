@@ -253,7 +253,7 @@ function icon_select_field_widget_form(&$form, &$form_state, $field, $instance, 
         '#default_value' => $defaults,
         '#options' => $options,
         // @TODO - add element validation
-        '#element_validate' => array('options_field_widget_validate'),
+        '#element_validate' => array('icon_select_field_widget_validate'),
         '#properties' => array(
           'filter_xss' => 1,
           'empty_option' => 'option_none',
@@ -274,6 +274,22 @@ function icon_select_field_widget_form(&$form, &$form_state, $field, $instance, 
   //drupal_set_message('<pre>'.print_r($element, 1).'</pre>');
 
   return $element;
+}
+
+/**
+ * Form element validation handler for icon select element.
+ *
+ * based on options element validation
+ */
+function icon_select_field_widget_validate($element, &$form_state) {
+	if ($element['#required'] && $element['#value'] == '_none') {
+    form_error($element, t('!name field is required.', array('!name' => $element['#title'])));
+  }
+  // Transpose selections from field => delta to delta => field, turning
+  // multiple selected options into multiple parent elements.
+  $items = _options_form_to_storage($element);
+	drupal_set_message('<pre>'.print_r($items, 1).'</pre>');
+  form_set_value($element, $items, $form_state);
 }
 
 /**
