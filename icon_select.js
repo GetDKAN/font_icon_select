@@ -29,11 +29,13 @@ function enable_unchecked(parent){
 function default_options_onclick(e){
   var cardinality = Drupal.settings.icon_select.cardinality;
 
-  if (typeof console.log == "function")console.log('in default options onclick')
-
   if (jQuery('.selectionInner', e.currentTarget).hasClass('disabled')) return false;
 
   if (cardinality == 1){
+    jQuery('.icon_select_instance_options div.selectionInner.checked').each(function removeCheckedAnon(){
+      jQuery(this).parent().parent().siblings('input').attr('checked', false);
+    });
+    
     jQuery('.icon_select_instance_options div.selectionInner').removeClass('checked');
     jQuery('div.selectionInner', e.currentTarget).addClass('checked');
 
