@@ -11,9 +11,10 @@ CONTENTS OF THIS FILE
 INTRODUCTION
 ------------
 
-The Icon Select module allows you to upload font libraries into a central
-repository, then use them in custom fields. It allows control of available
-icons on either a font-wide basis or based on the specific field instance.
+The Icon Select module allows the upload of font libraries into a central
+repository, then exposes them as an option in a custom field type. It allows
+control of available icons on either a font-wide basis or based on the
+specific field instance.
 
  * For a full description of the module, visit the project page:
    https://www.drupal.org/sandbox/wolffereast/2319993
@@ -70,6 +71,6 @@ Current maintainers:
 
 This project has been sponsored by:
  * Adworkshop
-   A full service shop, Adworkshop can provide anything from the billboard
-	 you are driving past to the website you shouldnt be looking at while
-	 driving. Visit https://www.adworkshop.com for more information.
+   An employee-owned integrated marketing agency providing strategic consulting
+	 and creative marketing solutions that help clients solve their evolving
+	 business challenges. Visit https://www.adworkshop.com for more information.
