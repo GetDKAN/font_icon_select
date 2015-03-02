@@ -79,6 +79,7 @@ function icon_select_font_library_form($form, &$form_state, $entity) {
         'file_validate_extensions' => array($ext),
         'file_validate_size' => array(ini_get('post_max_size') * 1024 * 1024),
       ),
+      '#required' => TRUE,
     );
   }
 
