@@ -20,10 +20,8 @@ function font_icon_select_field_info() {
       ),
       'default_widget'    => 'font_icon_select_icon_widget',
       'default_formatter' => 'font_icon_select_icon_default_formatter',
-/* * /
       // Support hook_entity_property_info() from contrib "Entity API".
       //'property_type' => 'node',
-/* */
       // Support default token formatter for field tokens.
       'default_token_formatter' => 'font_icon_select_plain',
       'instance_settings' => array(
@@ -267,7 +265,7 @@ function font_icon_select_field_widget_form(&$form, &$form_state, $field, $insta
       }
 
       break;
-  }
+  }//end switch
 
   return $element;
 }
@@ -284,7 +282,6 @@ function font_icon_select_field_widget_validate($element, &$form_state) {
   // Transpose selections from field => delta to delta => field, turning
   // multiple selected options into multiple parent elements.
   $items = _options_form_to_storage($element);
-  //drupal_set_message('<pre>'.print_r($items, 1).'</pre>');
   form_set_value($element, $items, $form_state);
 }
 
