@@ -26,7 +26,7 @@ jQuery(document).ready(function(){
  * disables unchecked options once cardinality is reached
  */
 function disable_unchecked(parent){
-  //switched from parents('label') to parent().parent() because of a noticable speed increase
+  //switched from parents('label') to parent().parent() because of a noticeable speed increase
   jQuery('div.selectionInner:not(.checked)', parent).parent().parent().siblings('input').attr('disabled', 'disabled');
   jQuery('div.selectionInner:not(.checked)', parent).addClass('disabled');
   return true;
@@ -102,7 +102,7 @@ function black_white_options_onclick(e){
         rangeItems = current.nextUntil('.lastSelected');
       }
       else{
-        //need the class for nextUntil, dom object doesnt work until 1.6
+        //need the class for nextUntil, dom object doesn't work until 1.6
         current.addClass('current');
         rangeItems = previous.nextUntil('.current');
         current.removeClass('current');

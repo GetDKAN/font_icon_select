@@ -8,7 +8,6 @@
  * Implements hook_schema()
  */
 function font_icon_select_schema(){
-  $font_files = array('eot','svg', 'ttf', 'woff');
   $schema['font_icon_select'] = array(
     'description' => 'Font settings storage.',
     'fields' => array(

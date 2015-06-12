@@ -1,6 +1,4 @@
 <?php
-// $Id$
-
 /**
  * @file
  * Administration page callbacks for the font_icon_select module.
@@ -91,9 +89,6 @@ function font_icon_select_font_library_form($form, &$form_state, $entity) {
       '#required' => TRUE,
     );
   }
-
-  //not fieldable
-  //field_attach_form('entity_example_basic', $entity, $form, $form_state);
 
   $form['submit'] = array(
     '#type' => 'submit',
@@ -294,8 +289,6 @@ function font_icon_select_font_global_blacklist_settings_form($form, &$form_stat
   drupal_add_css($module_path . '/font_icon_select.css');
   drupal_add_js($module_path . '/font_icon_select.js');
 
-  //$form['#after_build'][] = '_font_icon_select_font_settings_after_build';
-
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Submit'),
@@ -393,9 +386,6 @@ function _font_icon_select_get_font_icons($font_id, $suppress_icons = FALSE){
 function theme_font_icon_select_checkboxes($vars) {
   $element = $vars['element'];
 
-  // the selected keys from #options
-  $selected_options = empty($element['#value']) ? (isset($element['#default_value']) ? $element['#default_value'] : array()) : $element['#value'];
-
   $element['#default_value'] = is_array($element['#default_value']) ? $element['#default_value'] : array($element['#default_value']);
 
   $output = array();
@@ -475,7 +465,7 @@ function font_icon_select_font_library_delete($entity_id){
   //not an option?  page not found
   if (!isset($options[$entity_id])) return MENU_NOT_FOUND;
 
-  //grab field instances, lets make sure this field isnt in use
+  //grab field instances, lets make sure this field isn't in use
   $suppress_delete = _font_icon_select_get_field_instances();
 
   if (in_array($entity_id, $suppress_delete)){
