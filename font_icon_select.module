@@ -220,7 +220,7 @@ function font_icon_select_entity_info() {
   return array(
     'font_icon_select_font_library' => array(
       'label' => t('Font Library'),
-      'controller class' => 'IconSelectControllerClass',
+      'controller class' => 'FontIconSelectControllerClass',
       'base table' => 'font_icon_select',
       'entity keys' => array(
         'id' => 'flid',
