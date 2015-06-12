@@ -42,9 +42,10 @@ function font_icon_select_field_info() {
 
 /**
  * Implements hook_field_settings_form().
+ *
+ * @see _font_icon_select_get_available_fonts()
  */
 function font_icon_select_field_settings_form($field, $instance, $has_data) {
-  //drupal_set_message('in font_icon_select_field_settings_form');
   $settings = $field['settings'];
 
   $form = array();
@@ -72,9 +73,11 @@ function font_icon_select_field_settings_form($field, $instance, $has_data) {
 
 /**
  * implements hook_instance_settings_form
+ *
+ * @see _font_icon_select_get_font_icons()
+ * @see _font_icon_select_field_instance_settings_form_validate()
  */
 function font_icon_select_field_instance_settings_form($field, $instance) {
-  //drupal_set_message('in font_icon_select_field_instance_settings_form');
   $settings = $instance['settings'];
   $font_id = $field['settings']['font'];
   $form = array();
@@ -147,20 +150,18 @@ function font_icon_select_field_instance_settings_form($field, $instance) {
 }
 
 /**
- * Validate function for the font_icon_select field instance form
+ * Validation handler for the font_icon_select blacklist_fieldset suppress field instance
  */
 function _font_icon_select_field_instance_settings_form_validate(&$form, &$form_state) {
-  //drupal_set_message('in _font_icon_select_field_instance_settings_form_validate');
   $suppress_settings = array_values(array_unique($form_state['values']['instance']['settings']['blacklist_fieldset']['suppress']));
   $suppress_settings = array_filter($suppress_settings, function($i){return $i != '0';});
   $form_state['values']['instance']['settings']['blacklist_fieldset']['suppress'] = $suppress_settings;
 }
 
-/*
+/**
  * Implements hook_field_prepare_view().
  */
 function font_icon_select_field_prepare_view($entity_type, $entities, $field, $instances, $langcode, &$items) {
-  //drupal_set_message('in font_icon_select_field_prepare_view');
   $ids = array();
   foreach ($items as $id => $entity_items) {
     foreach ($entity_items as $delta => $item) {
@@ -176,8 +177,6 @@ function font_icon_select_field_prepare_view($entity_type, $entities, $field, $i
  * Implements hook_field_widget_info().
  */
 function font_icon_select_field_widget_info() {
-  //drupal_set_message('in font_icon_select_field_widget_info');
-  //drupal_set_message('in font_icon_select_field_widget_info');
   return array(
     'font_icon_select_icon_widget' => array(
       'label' => t('Font Icon Select check boxes/radio buttons'),
@@ -191,15 +190,11 @@ function font_icon_select_field_widget_info() {
 
 /**
  * Implements hook_field_widget_form().
+ *
+ * @see _font_icon_select_get_available_fonts()
+ * @see font_icon_select_field_widget_validate()
  */
 function font_icon_select_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
-  //drupal_set_message('in font_icon_select_field_widget_form');
-  //foreach (debug_backtrace() as $key => $value) drupal_set_message($value['function']);
-  //drupal_set_message('&nbsp');
-
-
-  //drupal_set_message('<pre>'.print_r($element, 1).'</pre>');
-
   switch ($instance['widget']['type']) {
 
     case 'font_icon_select_icon_widget':
@@ -211,12 +206,8 @@ function font_icon_select_field_widget_form(&$form, &$form_state, $field, $insta
 
       $multiple = $field['cardinality'] > 1 || $field['cardinality'] == FIELD_CARDINALITY_UNLIMITED;
 
-      //drupal_set_message('<pre>'.print_r($instance, 1).'</pre>');
-
       $defaults = array();
       foreach($items as $key => $value)$defaults[$key] = $value['value'];
-
-
 
       //pull the font entity info here
       $entity = entity_load('font_icon_select_font_library', array($field['settings']['font']));
@@ -278,8 +269,6 @@ function font_icon_select_field_widget_form(&$form, &$form_state, $field, $insta
       break;
   }
 
-  //drupal_set_message('<pre>'.print_r($element, 1).'</pre>');
-
   return $element;
 }
 
@@ -289,7 +278,6 @@ function font_icon_select_field_widget_form(&$form, &$form_state, $field, $insta
  * based on options element validation
  */
 function font_icon_select_field_widget_validate($element, &$form_state) {
-  //drupal_set_message('in font_icon_select_field_widget_validate');
   if ($element['#required'] && $element['#value'] == '_none') {
     form_error($element, t('!name field is required.', array('!name' => $element['#title'])));
   }
@@ -304,7 +292,6 @@ function font_icon_select_field_widget_validate($element, &$form_state) {
  * Implements hook_field_formatter_info().
  */
 function font_icon_select_field_formatter_info() {
-  //drupal_set_message('in font_icon_select_field_formatter_info');
   $ret = array(
     'font_icon_select_icon_default_formatter' => array(
       'label' => t('default'),
@@ -319,16 +306,16 @@ function font_icon_select_field_formatter_info() {
  * Implements hook_field_formatter_settings_summary().
  */
 function font_icon_select_field_formatter_settings_summary($field, $instance, $view_mode) {
-  //drupal_set_message('in font_icon_select_field_formatter_settings_summary');
   //returning an empty value suppresses the formatter settings form
   return;
 }
 
 /**
  * Implements hook_field_formatter_view().
+ *
+ * @see _font_icon_select_get_available_fonts()
  */
 function font_icon_select_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
-  //drupal_set_message('in font_icon_select_field_formatter_view');
   $settings = $display['settings'];
   $result = array();
 
@@ -340,7 +327,6 @@ function font_icon_select_field_formatter_view($entity_type, $entity, $field, $i
 
   switch ($display['type']) {
     case 'font_icon_select_icon_default_formatter':
-      //drupal_set_message('inside font_icon_select_icon_default_formatter');
       foreach ($items as $delta => $item) {
         if ($item['access']) {
           $result[$delta] = array(
