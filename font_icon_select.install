@@ -1,11 +1,12 @@
 <?php
-// $Id$
-
 /**
  * @file
  * Contains install and update functions for icon select module.
  */
 
+/**
+ * Implements hook_schema()
+ */
 function font_icon_select_schema(){
   $font_files = array('eot','svg', 'ttf', 'woff');
   $schema['font_icon_select'] = array(
