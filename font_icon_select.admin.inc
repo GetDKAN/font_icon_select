@@ -37,8 +37,8 @@ function font_icon_select_overview(){
 
 /**
  * Form content for admin/config/content/font_icon_select_options/add
- *  						and admin/config/content/font_icon_select_options/%/edit
- * 
+ *              and admin/config/content/font_icon_select_options/%/edit
+ *
  * create/edit/delete an font_icon_select_font_library_form entity.
  *
  * @param object $entity
@@ -221,7 +221,7 @@ function _font_icon_select_generate_general_css($fl_entity){
 
 /**
  * Form content for admin/config/content/font_icon_select_options/%/global_blacklist
- * 
+ *
  * edit global blacklist options for the selected font
  *
  * @param int $font_id

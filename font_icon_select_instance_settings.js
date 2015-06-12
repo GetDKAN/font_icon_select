@@ -30,15 +30,15 @@ jQuery(document).ready(function(){
  * updates default options selection enabled/disabled swap
  */
 function fieldCardinalityOnchange(e){
-	if (jQuery('#edit-field-cardinality').val() != Drupal.settings.font_icon_select.cardinality){
-		if (jQuery('#edit-field-cardinality').val() != 1 && jQuery('#edit-field-cardinality').val() <= jQuery('.font_icon_select_instance_options div.selectionInner.checked').length){
-			disable_unchecked(jQuery('.font_icon_select_instance_options'));
-		}
-		else if (jQuery('#edit-field-cardinality').val() > jQuery('.font_icon_select_instance_options div.selectionInner.checked').length){
-			enable_unchecked(jQuery('.font_icon_select_instance_options'));
-		}
-		Drupal.settings.font_icon_select.cardinality = jQuery('#edit-field-cardinality').val();
-	}
+  if (jQuery('#edit-field-cardinality').val() != Drupal.settings.font_icon_select.cardinality){
+    if (jQuery('#edit-field-cardinality').val() != 1 && jQuery('#edit-field-cardinality').val() <= jQuery('.font_icon_select_instance_options div.selectionInner.checked').length){
+      disable_unchecked(jQuery('.font_icon_select_instance_options'));
+    }
+    else if (jQuery('#edit-field-cardinality').val() > jQuery('.font_icon_select_instance_options div.selectionInner.checked').length){
+      enable_unchecked(jQuery('.font_icon_select_instance_options'));
+    }
+    Drupal.settings.font_icon_select.cardinality = jQuery('#edit-field-cardinality').val();
+  }
 }
 
 /**

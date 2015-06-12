@@ -1,19 +1,19 @@
 <?php
-// $Id: font_icon_select.module $
+/**
+ * @file
+ * module file for font_icon_select module
+ *
+ * @todo hook up commented out hook_field_validate() implementation
+ */
 
 // Load all Field module hooks for Image.
 require_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'font_icon_select') . '/font_icon_select.field.inc';
 
-/*
- * implements hook_form_alter
+/**
+ * Implements hook_form_FORM_ID_alter()
  *
- * for debugging only - should be removed unless business logc is added
+ * adds settings to make the default value fieldset collapsible
  */
-function font_icon_select_form_alter(&$form, &$form_state, $form_id){
-  //drupal_set_message('<pre>'.print_r($form_id, 1).'</pre>');
-}
-
-//help with the field edit form here
 function font_icon_select_form_field_ui_field_edit_form_alter(&$form, &$form_state){
   if ($form['#field']['type'] == 'font_icon_select_icon'){
     //giving the default field fieldset attributes so it can collapse
@@ -24,8 +24,8 @@ function font_icon_select_form_field_ui_field_edit_form_alter(&$form, &$form_sta
   }
 }
 
-/*
- * implements hook_permission
+/**
+ * Implements hook_permission
  */
 function font_icon_select_permission(){
   return array(
@@ -35,8 +35,8 @@ function font_icon_select_permission(){
   );
 }
 
-/*
- * implements hook_theme
+/**
+ * Implements hook_theme()
  */
 function font_icon_select_theme() {
   return array(
@@ -51,7 +51,7 @@ function font_icon_select_theme() {
 }
 
 /**
- * Implementation of hook_menu().
+ * Implements hook_menu()
  */
 function font_icon_select_menu() {
 
@@ -60,7 +60,7 @@ function font_icon_select_menu() {
   $access_content = array('access content');
 
   $items['admin/config/content/font_icon_select_options'] = array(
-    'title' => 'Icon Select Options',
+    'title' => 'Font Icon Select Options',
     'description' => 'Icon Select Font Library Options',
     'type' => MENU_NORMAL_ITEM,
     'page callback' => 'font_icon_select_overview',
@@ -128,7 +128,7 @@ function font_icon_select_field_schema($field) {
   return array('columns' => $columns);
 }
 
-/*
+/**
  * Ajax callback for listing type taxonomy term dropdown
  *
  * populates the font blacklist options with appropriate font items
@@ -171,13 +171,11 @@ function font_icon_select_field_widget_error($element, $error, $form, &$form_sta
 
 /**
  * Implements hook_options_list().
+ *
+ * @see _font_icon_select_get_available_fonts()
+ * @see _font_icon_select_get_font_icons()
  */
 function font_icon_select_options_list($field, $instance, $entity_type, $entity) {
-/* * /
-  drupal_set_message('<pre>'.print_r($entity_type, 1).'</pre>');
-  drupal_set_message('<pre>'.print_r($entity, 1).'</pre>');
-  drupal_set_message('in hook options list');
-/* */
   //need to pull the icons here...
   module_load_include('inc', 'font_icon_select', 'font_icon_select.admin');
 
@@ -199,8 +197,10 @@ function font_icon_select_options_list($field, $instance, $entity_type, $entity)
   return array_diff($options, $instance['settings']['blacklist_fieldset']['suppress']);
 }
 
-/*
+/**
  * implements hook_preprocess_html
+ *
+ * @see _font_icon_select_get_available_fonts()
  */
 function font_icon_select_preprocess_html($vars){
   $module_path = drupal_get_path('module', 'font_icon_select');
@@ -229,19 +229,42 @@ function font_icon_select_entity_info() {
   );
 }
 
-interface IconSelectBasicControllerInterface
+/**
+ * FontIconSelectBasicControllerInterface definition
+ *
+ * @see hook_entity_info_alter()
+ */
+interface FontIconSelectBasicControllerInterface
   extends DrupalEntityControllerInterface {
+
+  /**
+   * Create and return a new entity_example_basic entity.
+   */
   public function create();
+
+  /**
+   * Saves an entity
+   *
+   * @param object $entity
+   *   The entity to save.
+   */
   public function save($entity);
+
+  /**
+   * Delete an entity.
+   *
+   * @param object $entity
+   *   The entity to delete.
+   */
   public function delete($entity);
 }
 
 /**
- * IconSelectControllerClass extends DrupalDefaultEntityController.
+ * FontIconSelectControllerClass extends DrupalDefaultEntityController.
  */
-class IconSelectControllerClass
+class FontIconSelectControllerClass
   extends DrupalDefaultEntityController
-  implements IconSelectBasicControllerInterface {
+  implements FontIconSelectBasicControllerInterface {
 
   /**
    * Create and return a new entity_example_basic entity.
@@ -261,7 +284,10 @@ class IconSelectControllerClass
   }
 
   /**
-   * Saves the custom fields using drupal_write_record()
+   * Saves an entity
+   *
+   * @param object $entity
+   *   The entity to save.
    */
   public function save($entity) {
     // Invoke hook_entity_presave().
@@ -294,9 +320,12 @@ class IconSelectControllerClass
   }
 
   /**
-   * Delete a single entity.
+   * Delete an entity.
    *
    * Really a convenience function for delete_multiple().
+   *
+   * @param object $entity
+   *   The entity to delete.
    */
   public function delete($entity) {
     $this->delete_multiple(array($entity));
