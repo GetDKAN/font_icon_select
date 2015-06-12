@@ -188,7 +188,6 @@ function font_icon_select_field_widget_info() {
 /**
  * Implements hook_field_widget_form().
  *
- * @see _font_icon_select_get_available_fonts()
  * @see font_icon_select_field_widget_validate()
  */
 function font_icon_select_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
@@ -196,9 +195,6 @@ function font_icon_select_field_widget_form(&$form, &$form_state, $field, $insta
 
     case 'font_icon_select_icon_widget':
       $module_path = drupal_get_path('module', 'font_icon_select');
-      //need to find the font name
-      module_load_include('inc', 'font_icon_select', 'font_icon_select.admin');
-      $available_fonts = _font_icon_select_get_available_fonts();
 
       $multiple = $field['cardinality'] > 1 || $field['cardinality'] == FIELD_CARDINALITY_UNLIMITED;
 
@@ -307,15 +303,9 @@ function font_icon_select_field_formatter_settings_summary($field, $instance, $v
 
 /**
  * Implements hook_field_formatter_view().
- *
- * @see _font_icon_select_get_available_fonts()
  */
 function font_icon_select_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
   $result = array();
-
-  //need to find the font name
-  module_load_include('inc', 'font_icon_select', 'font_icon_select.admin');
-  $available_fonts = _font_icon_select_get_available_fonts();
 
   switch ($display['type']) {
     case 'font_icon_select_icon_default_formatter':
