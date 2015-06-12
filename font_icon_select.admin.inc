@@ -6,7 +6,7 @@
  * Administration page callbacks for the font_icon_select module.
  */
 
-/*
+/**
  * page callback for the overview page
  *
  * lists current fonts, delete links, and add new font link
@@ -36,7 +36,16 @@ function font_icon_select_overview(){
 }
 
 /**
- * Form function to create/edit/delete an font_icon_select_font_library_form entity.
+ * Form content for admin/config/content/font_icon_select_options/add
+ *  						and admin/config/content/font_icon_select_options/%/edit
+ * 
+ * create/edit/delete an font_icon_select_font_library_form entity.
+ *
+ * @param object $entity
+ *  the entity to edit
+ *
+ * @see font_icon_select_font_library_form_submit()
+ * @see font_icon_select_font_library_form_delete()
  */
 function font_icon_select_font_library_form($form, &$form_state, $entity) {
   //pull numeric values out of the string
@@ -95,7 +104,7 @@ function font_icon_select_font_library_form($form, &$form_state, $entity) {
     $form['delete'] = array(
       '#type' => 'submit',
       '#value' => t('Delete'),
-      '#submit' => array('font_icon_select_font_library_edit_delete'),
+      '#submit' => array('font_icon_select_font_library_form_delete'),
       '#weight' => 200,
     );
   }
@@ -103,17 +112,17 @@ function font_icon_select_font_library_form($form, &$form_state, $entity) {
   return $form;
 }
 
-/*
- * Form submit function for font_icon_select_upload_library form
+/**
+ * Submit handler for font_icon_select_upload_library form delete option
  *
- * redirects form to delete form
+ * redirects to delete form
  */
-function font_icon_select_font_library_edit_delete($form, &$form_state){
+function font_icon_select_font_library_form_delete($form, &$form_state){
   $form_state['redirect'] = 'admin/config/content/font_icon_select_options/' . $form_state['values']['flid'] . '/delete';
 }
 
-/*
- * Form submit function for font_icon_select_upload_library form
+/**
+ * Submit handler for font_icon_select_upload_library form
  */
 function font_icon_select_font_library_form_submit($form, $form_state){
   if ($form_state['values']['flid'] == 0)$new_entity = entity_get_controller('font_icon_select_font_library')->create();
@@ -161,7 +170,10 @@ function font_icon_select_font_library_form_submit($form, $form_state){
 
 /**
  * helper function to generate a css file that will apply the correct font and icon to generated content
- **/
+ *
+ * @param object $fl_entity
+ *  the font_icon_select_font_library entity to use to generate the css file
+ */
 function _font_icon_select_generate_general_css($fl_entity){
   //drop the old file if one exists
   if (isset($fl_entity->general_generated_fid) && $fl_entity->general_generated_fid != 0 && $fl_entity->general_generated_fid != ''){
@@ -192,7 +204,7 @@ function _font_icon_select_generate_general_css($fl_entity){
     .font-icon-select-" . $fl_entity->flid . "{font-family: 'font_icon_select_" . $fl_entity->flid . "'}
   ";
 
-  //parse options ad put togethor css
+  //parse options and put togethor css
   foreach ($font_options as $key => $value){
     //drop the x off the front of the key
     $key = substr($key, 1);
@@ -207,6 +219,16 @@ function _font_icon_select_generate_general_css($fl_entity){
   entity_get_controller('font_icon_select_font_library')->save($fl_entity);
 }
 
+/**
+ * Form content for admin/config/content/font_icon_select_options/%/global_blacklist
+ * 
+ * edit global blacklist options for the selected font
+ *
+ * @param int $font_id
+ *  the font id of the targeted font file
+ *
+ * @see font_icon_select_font_global_blacklist_settings_form_submit()
+ */
 function font_icon_select_font_global_blacklist_settings_form($form, &$form_state, $font_id){
   if ((string)(int)$font_id == $font_id) $font_id = (int)$font_id;
 
@@ -282,6 +304,9 @@ function font_icon_select_font_global_blacklist_settings_form($form, &$form_stat
   return $form;
 }
 
+/**
+ * Submit handler for font_icon_select_font_global_blacklist_settings_form
+ */
 function font_icon_select_font_global_blacklist_settings_form_submit($form, &$form_state){
 
   $selected_values = array();
@@ -301,6 +326,12 @@ function font_icon_select_font_global_blacklist_settings_form_submit($form, &$fo
   entity_get_controller('font_icon_select_font_library')->save($entity);
 }
 
+/**
+ * Helper function that returns all available font_icon_select_font_library entities
+ *
+ * @return array
+ *   font_icon_select_font_library entities keyed by.
+ */
 function _font_icon_select_get_available_fonts(){
   $options = array();
 
@@ -313,8 +344,18 @@ function _font_icon_select_get_available_fonts(){
   return $options;
 }
 
+/**
+ * Helper function to return all icons for a given font
+ *
+ * @param int $font_id
+ *  font id
+ * @param bool $suppress_icons
+ *  if true load the font libraries blacklist in order to suppress them
+ *
+ * @return array
+ *  array of icons
+ */
 function _font_icon_select_get_font_icons($font_id, $suppress_icons = FALSE){
-  //drupal_set_message('in the _font_icon_select_get_font_icons function');
   $icon_options = array();
 
   //suppression array
@@ -341,13 +382,15 @@ function _font_icon_select_get_font_icons($font_id, $suppress_icons = FALSE){
     }
   }
 
-
-
   return $icon_options;
 }
 
+/**
+ * Themes a set of icon select checkboxes
+ *
+ * @param array $vars
+ */
 function theme_font_icon_select_checkboxes($vars) {
-  //drupal_set_message('in the theme_font_icon_select_checkboxes function');
   $element = $vars['element'];
 
   // the selected keys from #options
@@ -377,6 +420,17 @@ function theme_font_icon_select_checkboxes($vars) {
   return implode("\n", $output);
 }
 
+/**
+ * Form to delete a font_icon_select_font_library_form entity.
+ *
+ * @param int $entity_id
+ *  font library id
+ *
+ * @return array
+ *  form renderable array
+ *
+ * @see font_icon_select_font_library_delete_submit()
+ */
 function font_icon_select_font_library_delete_form($form, &$form_state, $entity_id){
   $form = array();
   $form['flid'] = array(
@@ -402,6 +456,18 @@ function font_icon_select_font_library_delete_form($form, &$form_state, $entity_
   return $form;
 }
 
+/**
+ * Page callback for admin/config/content/font_icon_select_options/%/delete
+ *
+ * checks entity existence and usage before loading delete confirmation form
+ *
+ * @param $entity_id
+ *  font library id
+ *
+ * @see _font_icon_select_get_available_fonts()
+ * @see _font_icon_select_get_field_instances()
+ * @see font_icon_select_font_library_delete_form()
+ */
 function font_icon_select_font_library_delete($entity_id){
   if (!is_numeric($entity_id)) drupal_goto('admin/config/content/font_icon_select_options');
 
@@ -421,6 +487,9 @@ function font_icon_select_font_library_delete($entity_id){
   }
 }
 
+/**
+ * Submit handler for font_icon_select_font_library_delete_form
+ */
 function font_icon_select_font_library_delete_submit($form, &$form_state){
   $entity = entity_load('font_icon_select_font_library', array($form_state['values']['flid']));
   $entity = array_shift($entity);
@@ -430,11 +499,10 @@ function font_icon_select_font_library_delete_submit($form, &$form_state){
   $form_state['redirect'] = 'admin/config/content/font_icon_select_options';
 }
 
-/*
+/**
  * helper function that returns all font libraries being used in icon select fields
  */
 function _font_icon_select_get_field_instances(){
-  //drupal_set_message('in the _font_icon_select_get_field_instances function');
   $suppress_delete = array();
   $instances = db_query('
     SELECT field_name, data
