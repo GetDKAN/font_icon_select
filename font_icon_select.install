@@ -6,9 +6,9 @@
  * Contains install and update functions for icon select module.
  */
 
-function icon_select_schema(){
+function font_icon_select_schema(){
   $font_files = array('eot','svg', 'ttf', 'woff');
-  $schema['icon_select'] = array(
+  $schema['font_icon_select'] = array(
     'description' => 'Font settings storage.',
     'fields' => array(
       'flid' => array(

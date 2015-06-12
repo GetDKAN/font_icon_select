@@ -1,6 +1,6 @@
 
 
-<div class="icon_selection_outer_wrapper">
+<div class="font_icon_selection_outer_wrapper">
   <?php print $element['field'];?>
   <label class="selectionWrapper option hideLabels" for="<?php print $element['element_id'] . '-' . $element['key'];?>">
     <div class="selectionOuter">

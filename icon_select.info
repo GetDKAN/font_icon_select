@@ -1,9 +1,0 @@
-name = Icon Selection
-description = System for font based icon selection.
-core = 7.x
-version = "7.x-0.1"
-
-project = "icon_select"
-datestamp = "1403630486"
-
-configure = admin/config/content/icon_select_options

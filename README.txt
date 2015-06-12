@@ -41,28 +41,28 @@ CONFIGURATION
 -------------
 
  * Add a new font: Configuration >> Content authoring >> Icon Select Options >> Upload New Library
- 
+
    - All 4 file types (.eot, .svg, .ttf, and .woff) are required.
-	 
+
  * Configure an existing Font: Configuration >> Content authoring >> Icon Select Options
- 
+
    - edit blacklist
-	 
-	   Select which Icons should be removed from all field instances.
-		 
-	 - edit font
-	 
-	   Upload different font files or change the Human Readable Name
-		 
+
+     Select which Icons should be removed from all field instances.
+
+   - edit font
+
+     Upload different font files or change the Human Readable Name
+
  * Add an Icon Select field
 
    - Once you have uploaded a font library you can add an field of type Icon
-	   Select. Select the desired Font from the dropdown.
+     Select. Select the desired Font from the dropdown.
 
-	 - The field settings include instance specific Whitelist/Blacklist options.
-	   The global Blacklist selections are already removed from the available
-		 icons. As the names imply, a whitelist will allow only the selected
-		 options, while a blacklist allows all unselected icons.
+   - The field settings include instance specific Whitelist/Blacklist options.
+     The global Blacklist selections are already removed from the available
+     icons. As the names imply, a whitelist will allow only the selected
+     options, while a blacklist allows all unselected icons.
 
 MAINTAINERS
 -----------
@@ -72,5 +72,5 @@ Current maintainers:
 This project has been sponsored by:
  * Adworkshop
    An employee-owned integrated marketing agency providing strategic consulting
-	 and creative marketing solutions that help clients solve their evolving
-	 business challenges. Visit https://www.adworkshop.com for more information.
+   and creative marketing solutions that help clients solve their evolving
+   business challenges. Visit https://www.adworkshop.com for more information.

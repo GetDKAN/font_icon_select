@@ -1,16 +1,16 @@
 //set default to unlimited
-if (typeof Drupal.settings.icon_select == 'undefined'){
-  Drupal.settings.icon_select = {
+if (typeof Drupal.settings.font_icon_select == 'undefined'){
+  Drupal.settings.font_icon_select = {
     cardinality : 0
   }
 }
 
-var cardinality = Drupal.settings.icon_select.cardinality;
+var cardinality = Drupal.settings.font_icon_select.cardinality;
 
 jQuery(document).ready(function(){
   //black/whitelist settings
   jQuery('div.icon_option_list_selection label').bind('click', black_white_options_onclick);
-  jQuery('div.icon_select_instance_options label').bind('click', default_options_onclick);
+  jQuery('div.font_icon_select_instance_options label').bind('click', default_options_onclick);
 });
 
 function disable_unchecked(parent){
@@ -21,23 +21,23 @@ function disable_unchecked(parent){
 }
 
 function enable_unchecked(parent){
-  jQuery('input.icon_select_options', parent).removeAttr('disabled');
+  jQuery('input.font_icon_select_options', parent).removeAttr('disabled');
   jQuery('.selectionInner', parent).removeClass('disabled');
   return true;
 }
 
 function default_options_onclick(e){
-  var cardinality = Drupal.settings.icon_select.cardinality,
-			outer_parent = jQuery(e.currentTarget).parents('.field-widget-icon-select-icon-widget');
+  var cardinality = Drupal.settings.font_icon_select.cardinality,
+      outer_parent = jQuery(e.currentTarget).parents('.field-widget-icon-select-icon-widget');
 
   if (jQuery('.selectionInner', e.currentTarget).hasClass('disabled')) return false;
 
   if (cardinality == 1){
-    jQuery('.icon_select_instance_options div.selectionInner.checked', outer_parent).each(function removeCheckedAnon(){
+    jQuery('.font_icon_select_instance_options div.selectionInner.checked', outer_parent).each(function removeCheckedAnon(){
       jQuery(this).parent().parent().siblings('input').attr('checked', false);
     });
-    
-    jQuery('.icon_select_instance_options div.selectionInner', outer_parent).removeClass('checked');
+
+    jQuery('.font_icon_select_instance_options div.selectionInner', outer_parent).removeClass('checked');
     jQuery('div.selectionInner', e.currentTarget).addClass('checked');
 
     return true;
@@ -47,20 +47,20 @@ function default_options_onclick(e){
     jQuery('div.selectionInner', e.currentTarget).removeClass('checked');
     //it is possible for the cardinality to be lower than the number of selected options
     //this can happen it the cardinality is reduced without first reducing the selected defaults
-    if (cardinality == 0 || cardinality > jQuery('.icon_select_instance_options div.selectionInner.checked').length) return enable_unchecked(jQuery('.icon_select_instance_options'));
+    if (cardinality == 0 || cardinality > jQuery('.font_icon_select_instance_options div.selectionInner.checked').length) return enable_unchecked(jQuery('.font_icon_select_instance_options'));
     //if we have too many checked still we need to disable the item that was just unchecked
-    else if (cardinality <= jQuery('.icon_select_instance_options div.selectionInner.checked').length) return disable_unchecked(jQuery('.icon_select_instance_options'));
+    else if (cardinality <= jQuery('.font_icon_select_instance_options div.selectionInner.checked').length) return disable_unchecked(jQuery('.font_icon_select_instance_options'));
   }
   else{
     jQuery('div.selectionInner', e.currentTarget).addClass('checked');
-    if (cardinality > 1 && cardinality == jQuery('.icon_select_instance_options div.selectionInner.checked').length) return disable_unchecked(jQuery('.icon_select_instance_options'));
+    if (cardinality > 1 && cardinality == jQuery('.font_icon_select_instance_options div.selectionInner.checked').length) return disable_unchecked(jQuery('.font_icon_select_instance_options'));
     return true;
   }
 }
 
 function black_white_options_onclick(e){
   var container = jQuery('div.icon_option_list_selection'),
-      current = jQuery(e.target).parents('.icon_selection_outer_wrapper'),
+      current = jQuery(e.target).parents('.font_icon_selection_outer_wrapper'),
       previous = jQuery('.lastSelected', container),
       addClass = (previous.length && e.shiftKey ? jQuery('div.selectionInner', previous).hasClass('checked') : !jQuery('div.selectionInner', current).hasClass('checked')),
       rangeItems = [];
@@ -93,7 +93,7 @@ function black_white_options_onclick(e){
   else jQuery('div.selectionInner', current).removeClass('checked');
 
   //reset the 'current' selected item
-  jQuery('.icon_selection_outer_wrapper', container).removeClass('lastSelected');
+  jQuery('.font_icon_selection_outer_wrapper', container).removeClass('lastSelected');
   jQuery(current).addClass('lastSelected');
 
   //trigger an event here in case we are in the instance settings
