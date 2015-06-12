@@ -1,3 +1,11 @@
+/**
+ * @file
+ * Javascript for font_icon_select
+ *
+ * provides js that runs admin selection functionality in the black/whitelist
+ * applied to the global form and field specific f
+ */
+
 //set default to unlimited
 if (typeof Drupal.settings.font_icon_select == 'undefined'){
   Drupal.settings.font_icon_select = {
@@ -7,12 +15,16 @@ if (typeof Drupal.settings.font_icon_select == 'undefined'){
 
 var cardinality = Drupal.settings.font_icon_select.cardinality;
 
+//bind onclick handlers
 jQuery(document).ready(function(){
   //black/whitelist settings
   jQuery('div.icon_option_list_selection label').bind('click', black_white_options_onclick);
   jQuery('div.font_icon_select_instance_options label').bind('click', default_options_onclick);
 });
 
+/**
+ * disables unchecked options once cardinality is reached
+ */
 function disable_unchecked(parent){
   //switched from parents('label') to parent().parent() because of a noticable speed increase
   jQuery('div.selectionInner:not(.checked)', parent).parent().parent().siblings('input').attr('disabled', 'disabled');
@@ -20,12 +32,24 @@ function disable_unchecked(parent){
   return true;
 }
 
+/**
+ * re-enables unchecked options after cardinality is no longer full
+ */
 function enable_unchecked(parent){
   jQuery('input.font_icon_select_options', parent).removeAttr('disabled');
   jQuery('.selectionInner', parent).removeClass('disabled');
   return true;
 }
 
+/**
+ * onclick handler for defualt option selection
+ *
+ * ensures that cardinality is observed
+ * drives classes that show coloration of (un)selected options
+ *
+ * @see disable_unchecked()
+ * @see enable_unchecked()
+ */
 function default_options_onclick(e){
   var cardinality = Drupal.settings.font_icon_select.cardinality,
       outer_parent = jQuery(e.currentTarget).parents('.field-widget-font-icon-select-icon-widget');
@@ -58,6 +82,12 @@ function default_options_onclick(e){
   }
 }
 
+/**
+ * Onclick handler for the black/whitelist selections
+ *
+ * updates available default options
+ * unchecks currently checked option if it becomes blacklisted
+ */
 function black_white_options_onclick(e){
   var container = jQuery('div.icon_option_list_selection'),
       current = jQuery(e.target).parents('.font_icon_selection_outer_wrapper'),
