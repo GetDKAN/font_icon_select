@@ -40,11 +40,11 @@ INSTALLATION
 CONFIGURATION
 -------------
 
- * Add a new font: Configuration >> Content authoring >> Icon Select Options >> Upload New Library
+ * Add a new font: Configuration >> Content authoring >> Font Icon Select Options >> Upload New Library
 
    - All 4 file types (.eot, .svg, .ttf, and .woff) are required.
 
- * Configure an existing Font: Configuration >> Content authoring >> Icon Select Options
+ * Configure an existing Font: Configuration >> Content authoring >> Font Icon Select Options
 
    - edit blacklist
 

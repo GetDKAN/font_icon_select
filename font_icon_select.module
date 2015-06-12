@@ -209,7 +209,7 @@ function font_icon_select_preprocess_html($vars){
   $css_to_print = '';
   foreach ($available_fonts as $key => $value){
     //this file is generated on save of the fonts in the _font_icon_select_generate_general_css function located in font_icon_select.admin.inc
-    drupal_add_css('public://icon-select-general-generated-' . $key . '.css', array('type' => 'file', 'preprocess' => TRUE));
+    drupal_add_css('public://font-icon-select-general-generated-' . $key . '.css', array('type' => 'file', 'preprocess' => TRUE));
   }
 }
 

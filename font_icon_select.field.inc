@@ -344,7 +344,7 @@ function font_icon_select_field_formatter_view($entity_type, $entity, $field, $i
       foreach ($items as $delta => $item) {
         if ($item['access']) {
           $result[$delta] = array(
-            '#prefix' => '<span class="icon-select-' . $field['settings']['font'] . ' icon-select-' . $field['settings']['font'] . '-' . substr($item['value'], 1) .'">',
+            '#prefix' => '<span class="font-icon-select-' . $field['settings']['font'] . ' font-icon-select-' . $field['settings']['font'] . '-' . substr($item['value'], 1) .'">',
             '#suffix' => '</span>',
           );
         }

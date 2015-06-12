@@ -28,7 +28,7 @@ function enable_unchecked(parent){
 
 function default_options_onclick(e){
   var cardinality = Drupal.settings.font_icon_select.cardinality,
-      outer_parent = jQuery(e.currentTarget).parents('.field-widget-icon-select-icon-widget');
+      outer_parent = jQuery(e.currentTarget).parents('.field-widget-font-icon-select-icon-widget');
 
   if (jQuery('.selectionInner', e.currentTarget).hasClass('disabled')) return false;
 

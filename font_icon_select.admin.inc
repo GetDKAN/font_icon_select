@@ -189,16 +189,16 @@ function _font_icon_select_generate_general_css($fl_entity){
       font-weight: normal;
       font-style: normal;
     }
-    .icon-select-" . $fl_entity->flid . "{font-family: 'font_icon_select_" . $fl_entity->flid . "'}
+    .font-icon-select-" . $fl_entity->flid . "{font-family: 'font_icon_select_" . $fl_entity->flid . "'}
   ";
 
   //parse options ad put togethor css
   foreach ($font_options as $key => $value){
     //drop the x off the front of the key
     $key = substr($key, 1);
-    $file_contents .= '.icon-select-' . $fl_entity->flid . '-' . $key . ':before{content:"\\' . $key . '"}';
+    $file_contents .= '.font-icon-select-' . $fl_entity->flid . '-' . $key . ':before{content:"\\' . $key . '"}';
   }
-  $generated_font_file = file_save_data($file_contents, 'public://icon-select-general-generated-' . $fl_entity->flid . '.css', FILE_EXISTS_REPLACE);
+  $generated_font_file = file_save_data($file_contents, 'public://font-icon-select-general-generated-' . $fl_entity->flid . '.css', FILE_EXISTS_REPLACE);
 
   //attach the new file to the fl
   $fl_entity->general_generated_fid = $generated_font_file->fid;
