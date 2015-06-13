@@ -41,7 +41,8 @@ CONFIGURATION
 -------------
 
  * Add a new font:
- *  Configuration >> Content authoring >> Font Icon Select Options >> Upload New Library
+ *  Configuration >> Content authoring >> Font Icon Select Options >>
+ *  Upload New Library
 
    - All 4 file types (.eot, .svg, .ttf, and .woff) are required.
 

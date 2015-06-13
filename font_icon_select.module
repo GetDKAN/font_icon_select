@@ -325,7 +325,7 @@ class FontIconSelectControllerClass extends DrupalDefaultEntityController implem
           // Grab the files to be deleted.
           foreach ($font_files as $id => $ext) {
             $fids[] = $entity->{$ext . '_fid'};
-					}
+          }
         }
         db_delete('font_icon_select')
           ->condition('flid', $flids, 'IN')

@@ -182,7 +182,7 @@ function font_icon_select_font_library_form_submit($form, $form_state) {
 /**
  * Helper function to generate a css file.
  *
- * The css file will apply the correct font and icon to generated content
+ * The css file will apply the correct font and icon to generated content.
  *
  * @param object $fl_entity
  *   The font_icon_select_font_library entity to use to generate the css file.
@@ -239,7 +239,9 @@ function _font_icon_select_generate_general_css($fl_entity) {
 }
 
 /**
- * Form content for admin/config/content/font_icon_select_options/%/global_blacklist.
+ * Form content.
+ *
+ * Used on admin/config/content/font_icon_select_options/%/global_blacklist.
  *
  * Edit global blacklist options for the selected font.
  *
