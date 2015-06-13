@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Implement an icon selection field
+ * Implement an icon selection field.
  */
 
 /**
@@ -20,18 +20,16 @@ function font_icon_select_field_info() {
       ),
       'default_widget'    => 'font_icon_select_icon_widget',
       'default_formatter' => 'font_icon_select_icon_default_formatter',
-      // Support hook_entity_property_info() from contrib "Entity API".
-      //'property_type' => 'node',
       // Support default token formatter for field tokens.
       'default_token_formatter' => 'font_icon_select_plain',
       'instance_settings' => array(
-        //text processing allows us to use the default text formatter
-        //without it we get an undefined error
+        // Text processing allows us to use the default text formatter
+        // without it we get an undefined error.
         'text_processing' => 0,
         'blacklist_fieldset' => array(
           'suppress' => array(),
-          //blacklist/whitelist boolean
-          'blacklist' => true,
+          // Blacklist/whitelist boolean.
+          'blacklist' => TRUE,
         ),
       ),
     ),
@@ -70,7 +68,7 @@ function font_icon_select_field_settings_form($field, $instance, $has_data) {
 }
 
 /**
- * implements hook_instance_settings_form
+ * Implements hook_instance_settings_form().
  *
  * @see _font_icon_select_get_font_icons()
  * @see _font_icon_select_field_instance_settings_form_validate()
@@ -80,17 +78,17 @@ function font_icon_select_field_instance_settings_form($field, $instance) {
   $font_id = $field['settings']['font'];
   $form = array();
 
-  //need to pull the icons here...
+  // Need to pull the icons here...
   module_load_include('inc', 'font_icon_select', 'font_icon_select.admin');
   $available_icons = _font_icon_select_get_font_icons($font_id);
 
-  //grab the settings from the db
+  // Grab the settings from the db.
   $entity = entity_load('font_icon_select_font_library', array($font_id));
   $entity = array_shift($entity);
   $global_settings = unserialize($entity->settings);
   $global_suppression = gettype($global_settings['suppress']) == 'array' ? $global_settings['suppress'] : array();
-  //remove the global blacklisted items from the available icons array
-  foreach ($global_suppression as $key => $icon_key){
+  // Remove the global blacklisted items from the available icons array.
+  foreach ($global_suppression as $key => $icon_key) {
     unset($available_icons[$icon_key]);
   }
 
@@ -123,12 +121,17 @@ function font_icon_select_field_instance_settings_form($field, $instance) {
     '#options' => $available_icons,
     '#default_value' => $settings['blacklist_fieldset']['suppress'],
     '#attributes' => array(
-      'class' => array('font_icon_select_options', $extra_class, 'icon_option_list_selection'),
+      'class' => array(
+        'font_icon_select_options',
+        $extra_class,
+        'icon_option_list_selection',
+      ),
     ),
     '#theme' => 'font_icon_select_checkboxes',
     '#element_validate' => array('_font_icon_select_field_instance_settings_form_validate'),
-    //attach css to keep shift click selection from highlighting
-    '#attached' => array('css' => array(
+    // Attach css to keep shift click selection from highlighting.
+    '#attached' => array(
+      'css' => array(
         array(
           'type' => 'inline',
           'data' => "
@@ -148,11 +151,13 @@ function font_icon_select_field_instance_settings_form($field, $instance) {
 }
 
 /**
- * Validation handler for the font_icon_select blacklist_fieldset suppress field instance
+ * Validation handler for the font_icon_select blacklist_fieldset instance.
  */
 function _font_icon_select_field_instance_settings_form_validate(&$form, &$form_state) {
   $suppress_settings = array_values(array_unique($form_state['values']['instance']['settings']['blacklist_fieldset']['suppress']));
-  $suppress_settings = array_filter($suppress_settings, function($i){return $i != '0';});
+  $suppress_settings = array_filter($suppress_settings, function($i) {
+    return $i != '0';
+  });
   $form_state['values']['instance']['settings']['blacklist_fieldset']['suppress'] = $suppress_settings;
 }
 
@@ -196,30 +201,42 @@ function font_icon_select_field_widget_form(&$form, &$form_state, $field, $insta
     case 'font_icon_select_icon_widget':
       $module_path = drupal_get_path('module', 'font_icon_select');
 
-      $multiple = $field['cardinality'] > 1 || $field['cardinality'] == FIELD_CARDINALITY_UNLIMITED;
-
       $defaults = array();
-      foreach($items as $key => $value)$defaults[$key] = $value['value'];
+      foreach ($items as $key => $value) {
+        $defaults[$key] = $value['value'];
+			}
 
-      //pull the font entity info here
+      // Pull the font entity info here.
       $entity = entity_load('font_icon_select_font_library', array($field['settings']['font']));
       $entity = array_shift($entity);
-      //get the font file info here
-      $files = file_load_multiple(array($entity->eot_fid, $entity->svg_fid, $entity->ttf_fid, $entity->woff_fid));
+      // Get the font file info here.
+			$entity_fids = array(
+        $entity->eot_fid,
+        $entity->svg_fid,
+        $entity->ttf_fid,
+        $entity->woff_fid,
+      );
+      $files = file_load_multiple($entity_fids);
 
       $module_path = drupal_get_path('module', 'font_icon_select');
 
-      //there has to be a better way to do this...
+      // There has to be a better way to do this...
       $options = (array) module_invoke($field['module'], 'options_list', $field, $instance, $element['#entity_type'], $element['#entity']);
 
       $element += array(
-        '#attributes' => array('class' => array('font_icon_select_options', 'whitelist', 'font_icon_select_instance_options')),
+        '#attributes' => array(
+          'class' => array(
+            'font_icon_select_options',
+            'whitelist',
+            'font_icon_select_instance_options',
+          ),
+        ),
         '#attached' => array(
           'js' => array(
             $module_path . '/font_icon_select.js',
             array(
-              'data' => array('font_icon_select' => array( 'cardinality' => ($field['cardinality'] == FIELD_CARDINALITY_UNLIMITED ? 0 : $field['cardinality']))),
-              'type' => 'setting'
+              'data' => array('font_icon_select' => array('cardinality' => ($field['cardinality'] == FIELD_CARDINALITY_UNLIMITED ? 0 : $field['cardinality']))),
+              'type' => 'setting',
             ),
           ),
           'css' => array(
@@ -229,8 +246,8 @@ function font_icon_select_field_widget_form(&$form, &$form_state, $field, $insta
               'data' => "
                 @font-face {
                   font-family: 'font_icon_select_current_font';
-                  src: url('".file_create_url($files[$entity->eot_fid]->uri)."');
-                  src: url('".file_create_url($files[$entity->eot_fid]->uri)."?#iefix') format('embedded-opentype'), url('".file_create_url($files[$entity->woff_fid]->uri)."') format('woff'), url('".file_create_url($files[$entity->ttf_fid]->uri)."') format('truetype'), url('".file_create_url($files[$entity->svg_fid]->uri)."') format('svg');
+                  src: url('" . file_create_url($files[$entity->eot_fid]->uri) . "');
+                  src: url('" . file_create_url($files[$entity->eot_fid]->uri) . "?#iefix') format('embedded-opentype'), url('" . file_create_url($files[$entity->woff_fid]->uri) . "') format('woff'), url('" . file_create_url($files[$entity->ttf_fid]->uri) . "') format('truetype'), url('" . file_create_url($files[$entity->svg_fid]->uri) . "') format('svg');
                   font-weight: normal;
                   font-style: normal;
                 }
@@ -253,8 +270,8 @@ function font_icon_select_field_widget_form(&$form, &$form_state, $field, $insta
         '#theme' => 'font_icon_select_checkboxes',
       );
 
-      if ($element['#entity'] == NULL || (is_string($element['#entity']) && trim($element['#entity']) == '')){
-        //instance settings specific js to deal with the extra defaults field
+      if ($element['#entity'] == NULL || (is_string($element['#entity']) && trim($element['#entity']) == '')) {
+        // Instance settings specific js to deal with the extra defaults field.
         $element['#attached']['js'][] = $module_path . '/font_icon_select_instance_settings.js';
       }
 
@@ -267,7 +284,7 @@ function font_icon_select_field_widget_form(&$form, &$form_state, $field, $insta
 /**
  * Form element validation handler for icon select element.
  *
- * based on options element validation
+ * Based on options element validation.
  */
 function font_icon_select_field_widget_validate($element, &$form_state) {
   if ($element['#required'] && $element['#value'] == '_none') {
@@ -297,8 +314,8 @@ function font_icon_select_field_formatter_info() {
  * Implements hook_field_formatter_settings_summary().
  */
 function font_icon_select_field_formatter_settings_summary($field, $instance, $view_mode) {
-  //returning an empty value suppresses the formatter settings form
-  return;
+  // Returning an empty value suppresses the formatter settings form.
+  return '';
 }
 
 /**
@@ -312,7 +329,7 @@ function font_icon_select_field_formatter_view($entity_type, $entity, $field, $i
       foreach ($items as $delta => $item) {
         if ($item['access']) {
           $result[$delta] = array(
-            '#prefix' => '<span class="font-icon-select-' . $field['settings']['font'] . ' font-icon-select-' . $field['settings']['font'] . '-' . substr($item['value'], 1) .'">',
+            '#prefix' => '<span class="font-icon-select-' . $field['settings']['font'] . ' font-icon-select-' . $field['settings']['font'] . '-' . substr($item['value'], 1) . '">',
             '#suffix' => '</span>',
           );
         }

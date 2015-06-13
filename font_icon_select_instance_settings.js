@@ -42,7 +42,7 @@ function fieldCardinalityOnchange(e){
 }
 
 /**
- * updates the available defaults after the black/white list has changed
+ * Updates the available defaults after the black/white list has changed.
  */
 function updateDefaults(){
   var whitelist = jQuery('div#edit-instance-settings-blacklist-fieldset-suppress .checked'),

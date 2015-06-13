@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * module file for font_icon_select module
+ * Module file for font_icon_select module.
  *
  * @todo hook up commented out hook_field_validate() implementation
  */
@@ -10,13 +10,13 @@
 require_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'font_icon_select') . '/font_icon_select.field.inc';
 
 /**
- * Implements hook_form_FORM_ID_alter()
+ * Implements hook_form_FORM_ID_alter().
  *
- * adds settings to make the default value fieldset collapsible
+ * Adds settings to make the default value fieldset collapsible.
  */
-function font_icon_select_form_field_ui_field_edit_form_alter(&$form, &$form_state){
-  if ($form['#field']['type'] == 'font_icon_select_icon'){
-    //giving the default field fieldset attributes so it can collapse
+function font_icon_select_form_field_ui_field_edit_form_alter(&$form, &$form_state) {
+  if ($form['#field']['type'] == 'font_icon_select_icon') {
+    // Giving the default field fieldset attributes so it can collapse.
     $form['instance']['default_value_widget']['#collapsible'] = TRUE;
     $form['instance']['default_value_widget']['#collapsed'] = TRUE;
     $form['instance']['default_value_widget']['#pre_render'][] = 'form_pre_render_fieldset';
@@ -25,9 +25,9 @@ function font_icon_select_form_field_ui_field_edit_form_alter(&$form, &$form_sta
 }
 
 /**
- * Implements hook_permission
+ * Implements hook_permission().
  */
-function font_icon_select_permission(){
+function font_icon_select_permission() {
   return array(
     'administer icon select settings' => array(
       'title' => t('Edit Icon Select Settings'),
@@ -36,7 +36,7 @@ function font_icon_select_permission(){
 }
 
 /**
- * Implements hook_theme()
+ * Implements hook_theme().
  */
 function font_icon_select_theme() {
   return array(
@@ -51,7 +51,7 @@ function font_icon_select_theme() {
 }
 
 /**
- * Implements hook_menu()
+ * Implements hook_menu().
  */
 function font_icon_select_menu() {
 
@@ -65,7 +65,7 @@ function font_icon_select_menu() {
     'file' => 'font_icon_select.admin.inc',
     'access arguments' => array('administer icon select settings'),
   );
-  //default tab
+  // Default tab.
   $items['admin/config/content/font_icon_select_options/overview'] = array(
     'title' => 'Uploaded Font Libraries',
     'type' => MENU_DEFAULT_LOCAL_TASK,
@@ -80,7 +80,7 @@ function font_icon_select_menu() {
     'access arguments' => array('administer icon select settings'),
   );
 
-  //edit font library blacklist
+  // Edit font library blacklist.
   $items['admin/config/content/font_icon_select_options/%/global_blacklist'] = array(
     'title' => 'Global Blacklist Selection',
     'page arguments' => array('font_icon_select_font_global_blacklist_settings_form', 4),
@@ -98,7 +98,7 @@ function font_icon_select_menu() {
     'access arguments' => array('administer icon select settings'),
     'type' => MENU_CALLBACK,
   );
-  //delete link for libraries.
+  // Delete link for libraries.
   $items['admin/config/content/font_icon_select_options/%/delete'] = array(
     'title' => 'Delete Library',
     'type' => MENU_CALLBACK,
@@ -122,50 +122,25 @@ function font_icon_select_field_schema($field) {
       'not null' => FALSE,
     ),
   );
-  //dont need the optional indexes or foreign keys
+  // Dont need the optional indexes or foreign keys.
   return array('columns' => $columns);
 }
 
 /**
- * Ajax callback for listing type taxonomy term dropdown
+ * Ajax callback for listing type taxonomy term dropdown.
  *
- * populates the font blacklist options with appropriate font items
+ * Populates the font blacklist options with appropriate font items.
  */
-function _font_icon_select_font_options_ajax($form, $form_state){
-  //drupal_rebuild_form
-  //$form = drupal_rebuild_form('listing_node_form', $form_state, $form);
-  //return $form['font_blacklist'];//$form['field_listing_type'];//$fields;
+function _font_icon_select_font_options_ajax($form, $form_state) {
   return print_r($form, 1);
-}
-
-
-/**
- * Implements hook_field_validate().
- *
- * Possible error codes:
- * - 'bad_icon': icon value is not present in the font file).
- */
-/* * /
-function font_icon_select_field_validate($entity_type, $entity, $field, $instance, $langcode, $items, &$errors) {
-
 }
 
 /**
  * Implements hook_field_is_empty().
  */
 function font_icon_select_field_is_empty($item, $field) {
-  //drupal_set_message('in the hook_field_is_empty function');
   return empty($item['value']);
 }
-
-/**
- * Implements hook_field_widget_error().
- */
-/* * /
-function font_icon_select_field_widget_error($element, $error, $form, &$form_state) {
-  form_error($element['value'], $error['message']);
-}
-/* */
 
 /**
  * Implements hook_options_list().
@@ -173,36 +148,44 @@ function font_icon_select_field_widget_error($element, $error, $form, &$form_sta
  * @see _font_icon_select_get_font_icons()
  */
 function font_icon_select_options_list($field, $instance, $entity_type, $entity) {
-  //need to pull the icons here...
+  // Need to pull the icons here...
   module_load_include('inc', 'font_icon_select', 'font_icon_select.admin');
 
   $options = _font_icon_select_get_font_icons($field['settings']['font'], TRUE);
 
-  //if this is an entity, restrict the options based on the field instance settings
-  if ($entity == NULL || $entity == '') return $options;
-
-  //drupal_set_message('<pre>'.print_r($instance, 1).'</pre>');
-  if ($instance['settings']['blacklist_fieldset']['blacklist'] == '0'){
-    $options = array();
-    foreach( $instance['settings']['blacklist_fieldset']['suppress'] as $key => $value) $options[$value] = '&#' . $value . ';';
+  // If this is an entity, restrict the options based on the field instance
+  // settings.
+  if ($entity == NULL || $entity == '') {
     return $options;
   }
-  //set it up for the array diff
-  foreach( $instance['settings']['blacklist_fieldset']['suppress'] as $key => $value) $instance['settings']['blacklist_fieldset']['suppress'][$key] = '&#' . $value . ';';
+
+  if ($instance['settings']['blacklist_fieldset']['blacklist'] == '0') {
+    $options = array();
+    foreach( $instance['settings']['blacklist_fieldset']['suppress'] as $key => $value) {
+      $options[$value] = '&#' . $value . ';';
+	}
+    return $options;
+  }
+  // Set it up for the array diff.
+  foreach ($instance['settings']['blacklist_fieldset']['suppress'] as $key => $value) {
+    $instance['settings']['blacklist_fieldset']['suppress'][$key] = '&#' . $value . ';';
+  }
 
   return array_diff($options, $instance['settings']['blacklist_fieldset']['suppress']);
 }
 
 /**
- * implements hook_preprocess_html
+ * Implements hook_preprocess_html().
  *
  * @see _font_icon_select_get_available_fonts()
  */
-function font_icon_select_preprocess_html($vars){
+function font_icon_select_preprocess_html($vars) {
   module_load_include('inc', 'font_icon_select', 'font_icon_select.admin');
   $available_fonts = _font_icon_select_get_available_fonts();
-  foreach ($available_fonts as $key => $value){
-    //this file is generated on save of the fonts in the _font_icon_select_generate_general_css function located in font_icon_select.admin.inc
+  foreach ($available_fonts as $key => $value) {
+    // This file is generated on save of the fonts in the 
+	// _font_icon_select_generate_general_css function located in
+	// font_icon_select.admin.inc.
     drupal_add_css('public://font-icon-select-general-generated-' . $key . '.css', array('type' => 'file', 'preprocess' => TRUE));
   }
 }
@@ -224,12 +207,11 @@ function font_icon_select_entity_info() {
 }
 
 /**
- * FontIconSelectBasicControllerInterface definition
+ * FontIconSelectBasicControllerInterface definition.
  *
  * @see hook_entity_info_alter()
  */
-interface FontIconSelectBasicControllerInterface
-  extends DrupalEntityControllerInterface {
+interface FontIconSelectBasicControllerInterface extends DrupalEntityControllerInterface {
 
   /**
    * Create and return a new entity_example_basic entity.
@@ -237,7 +219,7 @@ interface FontIconSelectBasicControllerInterface
   public function create();
 
   /**
-   * Saves an entity
+   * Saves an entity.
    *
    * @param object $entity
    *   The entity to save.
@@ -251,14 +233,13 @@ interface FontIconSelectBasicControllerInterface
    *   The entity to delete.
    */
   public function delete($entity);
+
 }
 
 /**
  * FontIconSelectControllerClass extends DrupalDefaultEntityController.
  */
-class FontIconSelectControllerClass
-  extends DrupalDefaultEntityController
-  implements FontIconSelectBasicControllerInterface {
+class FontIconSelectControllerClass extends DrupalDefaultEntityController implements FontIconSelectBasicControllerInterface {
 
   /**
    * Create and return a new entity_example_basic entity.
@@ -278,7 +259,7 @@ class FontIconSelectControllerClass
   }
 
   /**
-   * Saves an entity
+   * Saves an entity.
    *
    * @param object $entity
    *   The entity to save.
@@ -316,41 +297,39 @@ class FontIconSelectControllerClass
   /**
    * Delete an entity.
    *
-   * Really a convenience function for delete_multiple().
+   * Really a convenience function for deleteMultiple().
    *
    * @param object $entity
    *   The entity to delete.
    */
   public function delete($entity) {
-    $this->delete_multiple(array($entity));
+    $this->deleteMultiple(array($entity));
   }
 
   /**
    * Delete one or more entity_example_basic entities.
    *
-   * @param $entities
+   * @param array $entities
    *   An array of entity IDs or a single numeric ID.
    */
-  public function delete_multiple($entities) {
+  public function deleteMultiple($entities) {
     $flids = $fids = array();
-    $font_files = array('eot','svg', 'ttf', 'woff');
+    $font_files = array('eot', 'svg', 'ttf', 'woff');
     if (!empty($entities)) {
       $transaction = db_transaction();
       try {
         foreach ($entities as $entity) {
           // Invoke hook_entity_delete().
           module_invoke_all('entity_delete', $entity, 'font_icon_select_font_library');
-          //no need to delete fields, as this is not fieldable
-          //field_attach_delete('font_icon_select_font_library', $entity);
           $flids[] = $entity->flid;
-          //grab the files to be deleted
-          foreach($font_files as $id => $ext) $fids[] = $entity->{$ext.'_fid'};
+          // Grab the files to be deleted.
+          foreach ($font_files as $id => $ext) $fids[] = $entity->{$ext . '_fid'};
         }
         db_delete('font_icon_select')
           ->condition('flid', $flids, 'IN')
           ->execute();
-        //delete the files
-        foreach($fids as $id => $fid){
+        // Delete the files.
+        foreach ($fids as $id => $fid){
           $file = file_load($fid);
           file_usage_delete($file, 'font_icon_select');
           file_delete($file);
@@ -363,4 +342,5 @@ class FontIconSelectControllerClass
       }
     }
   }
+
 }
