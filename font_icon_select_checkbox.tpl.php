@@ -1,6 +1,6 @@
 <?php
 /**
- * @file font_icon_select_checkbox.tpl.php
+ * @file
  * Default admin select option template for font icon select field.
  */
 ?>

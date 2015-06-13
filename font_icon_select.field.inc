@@ -204,13 +204,13 @@ function font_icon_select_field_widget_form(&$form, &$form_state, $field, $insta
       $defaults = array();
       foreach ($items as $key => $value) {
         $defaults[$key] = $value['value'];
-			}
+      }
 
       // Pull the font entity info here.
       $entity = entity_load('font_icon_select_font_library', array($field['settings']['font']));
       $entity = array_shift($entity);
       // Get the font file info here.
-			$entity_fids = array(
+      $entity_fids = array(
         $entity->eot_fid,
         $entity->svg_fid,
         $entity->ttf_fid,

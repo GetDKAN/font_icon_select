@@ -161,9 +161,9 @@ function font_icon_select_options_list($field, $instance, $entity_type, $entity)
 
   if ($instance['settings']['blacklist_fieldset']['blacklist'] == '0') {
     $options = array();
-    foreach( $instance['settings']['blacklist_fieldset']['suppress'] as $key => $value) {
+    foreach ($instance['settings']['blacklist_fieldset']['suppress'] as $key => $value) {
       $options[$value] = '&#' . $value . ';';
-	}
+    }
     return $options;
   }
   // Set it up for the array diff.
@@ -183,9 +183,9 @@ function font_icon_select_preprocess_html($vars) {
   module_load_include('inc', 'font_icon_select', 'font_icon_select.admin');
   $available_fonts = _font_icon_select_get_available_fonts();
   foreach ($available_fonts as $key => $value) {
-    // This file is generated on save of the fonts in the 
-	// _font_icon_select_generate_general_css function located in
-	// font_icon_select.admin.inc.
+    // This file is generated on save of the fonts in the
+    // _font_icon_select_generate_general_css function located in
+    // font_icon_select.admin.inc.
     drupal_add_css('public://font-icon-select-general-generated-' . $key . '.css', array('type' => 'file', 'preprocess' => TRUE));
   }
 }
@@ -312,7 +312,7 @@ class FontIconSelectControllerClass extends DrupalDefaultEntityController implem
    * @param array $entities
    *   An array of entity IDs or a single numeric ID.
    */
-  public function deleteMultiple($entities) {
+  public function deleteMultiple(array $entities) {
     $flids = $fids = array();
     $font_files = array('eot', 'svg', 'ttf', 'woff');
     if (!empty($entities)) {
@@ -323,13 +323,15 @@ class FontIconSelectControllerClass extends DrupalDefaultEntityController implem
           module_invoke_all('entity_delete', $entity, 'font_icon_select_font_library');
           $flids[] = $entity->flid;
           // Grab the files to be deleted.
-          foreach ($font_files as $id => $ext) $fids[] = $entity->{$ext . '_fid'};
+          foreach ($font_files as $id => $ext) {
+            $fids[] = $entity->{$ext . '_fid'};
+					}
         }
         db_delete('font_icon_select')
           ->condition('flid', $flids, 'IN')
           ->execute();
         // Delete the files.
-        foreach ($fids as $id => $fid){
+        foreach ($fids as $id => $fid) {
           $file = file_load($fid);
           file_usage_delete($file, 'font_icon_select');
           file_delete($file);
