@@ -425,6 +425,8 @@ function _font_icon_select_get_font_icons($font_id, $suppress_icons = FALSE) {
 
   foreach ($matches[1] as $value) {
     if (trim($value) != '') {
+      // Avoid oddities in the font file here. Avoids possible XSS.
+      $value = filter_xss($value);
       $temp = preg_replace('{(^&#|;$)}', '', $value);
       if (!$suppress_icons || !in_array($temp, $suppress_array)) {
         $icon_options[preg_replace('{(^&#|;$)}', '', $value)] = $value;
