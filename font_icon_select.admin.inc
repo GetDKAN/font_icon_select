@@ -90,7 +90,7 @@ function font_icon_select_font_library_form($form, &$form_state, $entity) {
   );
 
   $font_types = array('eot', 'svg', 'ttf', 'woff');
-  foreach ($font_types as $id => $ext) {
+  foreach ($font_types as $ext) {
     $form['font_file_' . $ext] = array(
       '#type' => 'managed_file',
       '#title' => t('@ext', array('@ext', '.' . $ext)),
@@ -146,7 +146,7 @@ function font_icon_select_font_library_form_submit($form, $form_state) {
 
   $font_files = array('eot', 'svg', 'ttf', 'woff');
   // Run through and set all the fids.
-  foreach ($font_files as $id => $ext) {
+  foreach ($font_files as $ext) {
     $new_entity->{$ext . '_fid'} = $form_state['values']['font_file_' . $ext];
   }
 
@@ -341,7 +341,7 @@ function font_icon_select_font_global_blacklist_settings_form($form, &$form_stat
 function font_icon_select_font_global_blacklist_settings_form_submit($form, &$form_state) {
 
   $selected_values = array();
-  foreach ($form_state['values']['font_suppression_options'] as $key => $value) {
+  foreach ($form_state['values']['font_suppression_options'] as $value) {
     if ($value !== 0) {
       $selected_values[] = $value;
     }
@@ -370,7 +370,7 @@ function _font_icon_select_get_available_fonts() {
 
   $entities = entity_load('font_icon_select_font_library');
 
-  foreach ($entities as $flid => $entity) {
+  foreach ($entities as $entity) {
     $options[$entity->flid] = $entity->font_title;
   }
 
@@ -410,7 +410,7 @@ function _font_icon_select_get_font_icons($font_id, $suppress_icons = FALSE) {
   // Grab the available items.
   preg_match_all('{<glyph\sunicode="([^"]*)"}', $font_file, $matches);
 
-  foreach ($matches[1] as $key => $value) {
+  foreach ($matches[1] as $value) {
     if (trim($value) != '') {
       $temp = preg_replace('{(^&#|;$)}', '', $value);
       if (!$suppress_icons || !in_array($temp, $suppress_array)) {

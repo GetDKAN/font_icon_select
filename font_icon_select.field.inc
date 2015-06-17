@@ -88,7 +88,7 @@ function font_icon_select_field_instance_settings_form($field, $instance) {
   $global_settings = unserialize($entity->settings);
   $global_suppression = gettype($global_settings['suppress']) == 'array' ? $global_settings['suppress'] : array();
   // Remove the global blacklisted items from the available icons array.
-  foreach ($global_suppression as $key => $icon_key) {
+  foreach ($global_suppression as $icon_key) {
     unset($available_icons[$icon_key]);
   }
 

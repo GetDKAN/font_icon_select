@@ -323,7 +323,7 @@ class FontIconSelectControllerClass extends DrupalDefaultEntityController implem
           module_invoke_all('entity_delete', $entity, 'font_icon_select_font_library');
           $flids[] = $entity->flid;
           // Grab the files to be deleted.
-          foreach ($font_files as $id => $ext) {
+          foreach ($font_files as $ext) {
             $fids[] = $entity->{$ext . '_fid'};
           }
         }
