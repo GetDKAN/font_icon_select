@@ -127,9 +127,9 @@ function font_icon_select_font_library_form($form, &$form_state, $entity) {
  *
  * checks for XSS
  */
-function font_icon_select_font_library_form_validate(&$form, &$form_state){
+function font_icon_select_font_library_form_validate(&$form, &$form_state) {
   // Check plain returns an empty string if the tested text is not valid UTF-8.
-  if (check_plain($form_state['values']['font_title']) == ''){
+  if (check_plain($form_state['values']['font_title']) == '') {
     form_set_error('font_title', t('The Font Title you entered is not valid UTF-8. Please fix this before re-submitting the form.'));
   }
 }
