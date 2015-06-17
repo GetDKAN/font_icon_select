@@ -226,7 +226,7 @@ function _font_icon_select_generate_general_css($fl_entity) {
   // Parse options and put togethor css.
   foreach ($font_options as $key => $value) {
     // Drop the x off the front of the key.
-    $key = substr($key, 1);
+    $key = drupal_substr($key, 1);
     $file_contents .= '.font-icon-select-' . $fl_entity->flid . '-' . $key . ':before{content:"\\' . $key . '"}';
   }
   $generated_font_file = file_save_data($file_contents, 'public://font-icon-select-general-generated-' . $fl_entity->flid . '.css', FILE_EXISTS_REPLACE);
@@ -329,7 +329,7 @@ function font_icon_select_font_global_blacklist_settings_form($form, &$form_stat
 
   $form['submit'] = array(
     '#type' => 'submit',
-    '#value' => t('Submit'),
+    '#value' => t('Save Blacklist Settings'),
   );
 
   return $form;

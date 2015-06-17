@@ -60,7 +60,7 @@ function default_options_onclick(e){
   }
 
   if (cardinality == 1) {
-    jQuery('.font_icon_select_instance_options div.selectionInner.checked', outer_parent).each(function removeCheckedAnon(){
+    jQuery('.font_icon_select_instance_options div.selectionInner.checked', outer_parent).each(function remove_checked_anon(){
       jQuery(this).parent().parent().siblings('input').attr('checked', false);
     });
 

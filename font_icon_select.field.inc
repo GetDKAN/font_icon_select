@@ -288,7 +288,7 @@ function font_icon_select_field_widget_form(&$form, &$form_state, $field, $insta
  */
 function font_icon_select_field_widget_validate($element, &$form_state) {
   if ($element['#required'] && $element['#value'] == '_none') {
-    form_error($element, t('!name field is required.', array('!name' => $element['#title'])));
+    form_error($element, t('@name field is required.', array('@name' => $element['#title'])));
   }
   // Transpose selections from field => delta to delta => field, turning
   // multiple selected options into multiple parent elements.
@@ -329,7 +329,7 @@ function font_icon_select_field_formatter_view($entity_type, $entity, $field, $i
       foreach ($items as $delta => $item) {
         if ($item['access']) {
           $result[$delta] = array(
-            '#prefix' => '<span class="font-icon-select-' . $field['settings']['font'] . ' font-icon-select-' . $field['settings']['font'] . '-' . substr($item['value'], 1) . '">',
+            '#prefix' => '<span class="font-icon-select-' . $field['settings']['font'] . ' font-icon-select-' . $field['settings']['font'] . '-' . drupal_substr($item['value'], 1) . '">',
             '#suffix' => '</span>',
           );
         }

@@ -13,15 +13,15 @@
 jQuery(document).ready(function(){
 
   // Fire the update to hide the black/whitelisted items.
-  updateDefaults();
+  update_defaults();
 
-  jQuery('#edit-instance-settings-blacklist-fieldset-blacklist input').bind('click', updateDefaults)
+  jQuery('#edit-instance-settings-blacklist-fieldset-blacklist input').bind('click', update_defaults)
 
   // Triggered in font_icon_select.js.
-  jQuery('div.icon_option_list_selection label').bind('black_white_option_clicked', updateDefaults);
+  jQuery('div.icon_option_list_selection label').bind('black_white_option_clicked', update_defaults);
 
   // Watch to see if the cardinality changes.
-  jQuery('#edit-field-cardinality').bind('change', fieldCardinalityOnchange);
+  jQuery('#edit-field-cardinality').bind('change', field_cardinality_onchange);
 });
 
 /**
@@ -29,7 +29,7 @@ jQuery(document).ready(function(){
  *
  * Updates default options selection enabled/disabled swap.
  */
-function fieldCardinalityOnchange(e){
+function field_cardinality_onchange(e){
   if (jQuery('#edit-field-cardinality').val() != Drupal.settings.font_icon_select.cardinality) {
     if (jQuery('#edit-field-cardinality').val() != 1 && jQuery('#edit-field-cardinality').val() <= jQuery('.font_icon_select_instance_options div.selectionInner.checked').length) {
       disable_unchecked(jQuery('.font_icon_select_instance_options'));
@@ -44,7 +44,7 @@ function fieldCardinalityOnchange(e){
 /**
  * Updates the available defaults after the black/white list has changed.
  */
-function updateDefaults(){
+function update_defaults(){
   var whitelist = jQuery('div#edit-instance-settings-blacklist-fieldset-suppress .checked'),
       blacklist = jQuery('div#edit-instance-settings-blacklist-fieldset-suppress .selectionInner:not(.checked)');
 
