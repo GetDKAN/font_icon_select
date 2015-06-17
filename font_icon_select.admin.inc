@@ -101,7 +101,7 @@ function font_icon_select_font_library_form($form, &$form_state, $entity) {
         'file_validate_size' => array(ini_get('post_max_size') * 1024 * 1024),
       ),
       '#required' => TRUE,
-			'#description' => t('The font\'s @ext file', array('@ext' => $ext)),
+      '#description' => t('The font\'s @ext file', array('@ext' => $ext)),
     );
   }
 
@@ -120,6 +120,18 @@ function font_icon_select_font_library_form($form, &$form_state, $entity) {
   }
 
   return $form;
+}
+
+/**
+ * Validate handler for font_icon_select_font_library_form
+ *
+ * checks for XSS
+ */
+function font_icon_select_font_library_form_validate(&$form, &$form_state){
+  // Check plain returns an empty string if the tested text is not valid UTF-8.
+  if (check_plain($form_state['values']['font_title']) == ''){
+    form_set_error('font_title', t('The Font Title you entered is not valid UTF-8. Please fix this before re-submitting the form.'));
+  }
 }
 
 /**
@@ -143,7 +155,7 @@ function font_icon_select_font_library_form_submit($form, $form_state) {
     $new_entity = array_shift($new_entity);
   }
 
-  $new_entity->font_title = $form_state['values']['font_title'];
+  $new_entity->font_title = check_plain($form_state['values']['font_title']);
 
   $font_files = array('eot', 'svg', 'ttf', 'woff');
   // Run through and set all the fids.
