@@ -34,7 +34,7 @@ function font_icon_select_overview() {
     $return_val = theme('table', array('header' => $headers, 'rows' => $rows));
   }
   else {
-    $return_val = t('No font libraries have been uploaded yet. Please @link to add one.', array('@link' => l(t('click here'), 'admin/config/content/font_icon_select_options/add')));
+    $return_val = t('No font libraries have been uploaded yet. Please !link to add one.', array('!link' => l(t('click here'), 'admin/config/content/font_icon_select_options/add')));
   }
 
   return $return_val;
@@ -93,7 +93,7 @@ function font_icon_select_font_library_form($form, &$form_state, $entity) {
   foreach ($font_types as $ext) {
     $form['font_file_' . $ext] = array(
       '#type' => 'managed_file',
-      '#title' => t('@ext', array('@ext', '.' . $ext)),
+      '#title' => t('@ext', array('@ext' => '.' . $ext)),
       '#default_value' => (gettype($entity) == 'object' ? $entity->{$ext . '_fid'} : ''),
       '#upload_location' => 'public://',
       '#upload_validators' => array(
@@ -101,6 +101,7 @@ function font_icon_select_font_library_form($form, &$form_state, $entity) {
         'file_validate_size' => array(ini_get('post_max_size') * 1024 * 1024),
       ),
       '#required' => TRUE,
+			'#description' => t('The font\'s @ext file', array('@ext' => $ext)),
     );
   }
 
