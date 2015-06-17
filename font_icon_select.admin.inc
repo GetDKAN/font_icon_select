@@ -101,7 +101,7 @@ function font_icon_select_font_library_form($form, &$form_state, $entity) {
         'file_validate_size' => array(ini_get('post_max_size') * 1024 * 1024),
       ),
       '#required' => TRUE,
-      '#description' => t('The font\'s @ext file', array('@ext' => $ext)),
+      '#description' => t("The font's @ext file", array('@ext' => $ext)),
     );
   }
 
@@ -123,9 +123,9 @@ function font_icon_select_font_library_form($form, &$form_state, $entity) {
 }
 
 /**
- * Validate handler for font_icon_select_font_library_form
+ * Validate handler for font_icon_select_font_library_form.
  *
- * checks for XSS
+ * Checks for XSS attempts in the Font Title.
  */
 function font_icon_select_font_library_form_validate(&$form, &$form_state) {
   // Check plain returns an empty string if the tested text is not valid UTF-8.
