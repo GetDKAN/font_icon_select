@@ -331,7 +331,7 @@ class FontIconSelectControllerClass extends DrupalDefaultEntityController implem
           ->condition('flid', $flids, 'IN')
           ->execute();
         // Delete the files.
-        foreach ($fids as $id => $fid) {
+        foreach ($fids as $fid) {
           $file = file_load($fid);
           file_usage_delete($file, 'font_icon_select');
           file_delete($file);

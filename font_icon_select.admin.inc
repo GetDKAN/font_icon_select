@@ -154,7 +154,7 @@ function font_icon_select_font_library_form_submit($form, $form_state) {
   entity_get_controller('font_icon_select_font_library')->save($new_entity);
 
   // Add the file usage.
-  foreach ($font_files as $id => $ext) {
+  foreach ($font_files as $ext) {
     if ($form_state['values']['flid'] == 0 || $form_state['values']['font_file_' . $ext] != $form_state['values']['entity_presave']->{$ext . '_fid'}) {
       // Need to load the whole file to change it's status to permanent.
       $file = file_load($form_state['values']['font_file_' . $ext]);
