@@ -451,13 +451,20 @@ function theme_font_icon_select_checkboxes(array $vars) {
   $output = array();
 
   foreach ($element['#options'] as $key => $value) {
-
-    $field = '<input type="checkbox" name="' . $element['#name'] . '[]" value="' . $key . '" id="' . $element['#id'] . '-' . $key . '" ' . (in_array($key, $element['#default_value']) ? 'checked="checked" ' : '') . ' />';
+    $input_options = array(
+      '#type' => 'checkbox',
+      '#name' => $element['#name'] . '[]',
+      '#attributes' => array(
+        'value' => $key,
+      ),
+      '#id' =>  $element['#id'] . '-' . $key,
+    );
+    if (in_array($key, $element['#default_value'])) $input_options['#attributes'] = array('checked' => 'checked');
 
     $current_element = array(
       'key' => $key,
       'value' => $value,
-      'field' => $field,
+      'field' => drupal_render($input_options),
       'checked' => in_array($key, $element['#default_value']),
       'element_id' => $element['#id'],
     );
@@ -529,7 +536,7 @@ function font_icon_select_font_library_delete($entity_id) {
   $suppress_delete = _font_icon_select_get_field_instances();
 
   if (in_array($entity_id, $suppress_delete)) {
-    return 'This font library is being used by an Icon Select field.  You must remove the field before deleting the library.';
+    return t('This font library is being used by an Icon Select field.  You must remove the field before deleting the library.');
   }
   else {
     $form = drupal_get_form('font_icon_select_font_library_delete_form', $entity_id);
