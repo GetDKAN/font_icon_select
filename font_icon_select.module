@@ -2,12 +2,33 @@
 /**
  * @file
  * Module file for font_icon_select module.
- *
- * @todo hook up commented out hook_field_validate() implementation
  */
 
-// Load all Field module hooks for Image.
+// Load all Field module hooks for Font Icon Select.
 require_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'font_icon_select') . '/font_icon_select.field.inc';
+
+/**
+ * Implements hook_help().
+ */
+function font_icon_select_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#font_icon_select':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Font Icon Select module manages the creation, editing, deletion, and settings of admin managed font libraries, and exposes a new field type that utilizes the managed font libraries as repositories from which icons can be selected.') . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Managing font libraries') . '</dt>';
+      $output .= '<dd>' . t('The Font Icon Select module allows users with the <em>Edit Icon Select Settings</em> permission to manage font libraries.  <a href="@new_library">Adding a new library</a> is as simple as uploading the 4 required font files (.eot, .svg, .ttf, and .woff. The files are required to improve browser compatibility).  The files can be changed at any later point from the <a href="@edit_libraries">library management interface</a>.', array('@new_library' => url('admin/config/content/font_icon_select_options/add'), '@edit_libraries' => url('admin/config/content/font_icon_select_options'))) . '</dd>';
+      $output .= '<dt>' . t('Managing global icon blacklists') . '</dt>';
+      $output .= '<dd>' . t('From the <a href="@edit_libraries">library management interface</a> library specific icon blacklists can be created/changed. Clicking ‘edit blacklist’ will show a page that allows selection of any icons from the font library that should never be available in any field.', array('@edit_libraries' => url('admin/config/content/font_icon_select_options'))) . '</dd>';
+      $output .= '<dt>' . t('Attaching a library to a content type') . '</dt>';
+      $output .= '<dd>' . t('The Font Icon Select module adds another <a href="@field">field</a> type. A library is assigned to the field which then displays all options not forbidden by the global blacklist. Each font icon select field allows for a local whitelist or blacklist that can be managed from the field settings interface.  A field’s options will either consist of all icons selected on the whitelist, or all icons not selected on either the local or global blacklist.', array('@field' => url('admin/help/field'))) . '</dd>';
+      return $output;
+    case 'admin/config/content/font_icon_select_options/%/global_blacklist':
+      return '<p>' . t('Select icons that should not be available for use on any field to which this font library is assigned. A field level blacklist or whitelist is available in the field editing interface.') . '</p>';
+  }
+}
 
 /**
  * Implements hook_form_FORM_ID_alter().

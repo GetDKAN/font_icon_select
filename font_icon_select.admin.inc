@@ -287,7 +287,7 @@ function font_icon_select_font_global_blacklist_settings_form($form, &$form_stat
 
   $form['font_suppression_options'] = array(
     '#type' => 'checkboxes',
-    '#title' => t('Select Icons that should not be available to the user.'),
+    '#title' => t('Font Library Blacklist.'),
     '#options' => $available_icons,
     '#default_value' => $defaults,
     '#attributes' => array(
