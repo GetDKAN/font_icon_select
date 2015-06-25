@@ -426,10 +426,12 @@ function _font_icon_select_get_font_icons($font_id, $suppress_icons = FALSE) {
   foreach ($matches[1] as $value) {
     if (trim($value) != '') {
       // Avoid oddities in the font file here. Avoids possible XSS.
-      // Remove any tags from the value. This avoids possible sneaky script inclusions in the font file.
+      // Remove any tags from the value. This avoids possible sneaky
+			// script inclusions in the font file.
       $value = strip_tags($value);
-      // Only filter xss if drupal_validate_utf8 returns false. Some font files use values above the legal limit
-      // which filter_xss will change unless drupal_validate_utf8 allows them through.
+      // Only filter xss if drupal_validate_utf8 returns false. Some font
+			// files use values above the legal limit which filter_xss will
+			// change unless drupal_validate_utf8 allows them through.
       if (!drupal_validate_utf8($value)) {
         $value = filter_xss($value);
       }

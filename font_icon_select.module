@@ -25,6 +25,7 @@ function font_icon_select_help($path, $arg) {
       $output .= '<dt>' . t('Attaching a library to a content type') . '</dt>';
       $output .= '<dd>' . t('The Font Icon Select module adds another <a href="@field">field</a> type. A library is assigned to the field which then displays all options not forbidden by the global blacklist. Each font icon select field allows for a local whitelist or blacklist that can be managed from the field settings interface.  A field’s options will either consist of all icons selected on the whitelist, or all icons not selected on either the local or global blacklist.', array('@field' => url('admin/help/field'))) . '</dd>';
       return $output;
+
     case 'admin/config/content/font_icon_select_options/%/global_blacklist':
       return '<p>' . t('Select icons that should not be available for use on any field to which this font library is assigned. A field level blacklist or whitelist is available in the field editing interface.') . '</p>';
   }
