@@ -468,7 +468,7 @@ function theme_font_icon_select_checkboxes(array $vars) {
       '#id' => $element['#id'] . '-' . $key,
     );
     if (in_array($key, $element['#default_value'])) {
-      $input_options['#attributes'] = array('checked' => 'checked');
+      $input_options['#attributes']['checked'] = 'checked';
     }
 
     $current_element = array(
