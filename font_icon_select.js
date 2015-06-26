@@ -18,8 +18,8 @@ var cardinality = Drupal.settings.font_icon_select.cardinality;
 // Bind onclick handlers.
 jQuery(document).ready(function(){
   // Black/whitelist settings.
-  jQuery('div.icon_option_list_selection label').bind('click', black_white_options_onclick);
-  jQuery('div.font_icon_select_instance_options label').bind('click', default_options_onclick);
+  jQuery('div.icon_option_list_selection').delegate('label', 'click', black_white_options_onclick);
+  jQuery('div.font_icon_select_instance_options').delegate('label', 'click', default_options_onclick);
 });
 
 /**
@@ -61,7 +61,7 @@ function default_options_onclick(e){
 
   if (cardinality == 1) {
     jQuery('.font_icon_select_instance_options div.selectionInner.checked', outer_parent).each(function remove_checked_anon(){
-      jQuery(this).parent().parent().siblings('input').attr('checked', false);
+      jQuery(this).parent().parent().siblings('.form-item').children('input').attr('checked', false);
     });
 
     jQuery('.font_icon_select_instance_options div.selectionInner', outer_parent).removeClass('checked');
