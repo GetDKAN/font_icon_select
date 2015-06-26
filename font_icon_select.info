@@ -1,6 +1,6 @@
 name = Font Icon Select
 description = Provides font file management, font based icon select widget, and global/local black/whitelist options for font options.
 core = 7.x
+configure = admin/config/content/font_icon_select_options
 
 dependencies[] = file
-configure = admin/config/content/font_icon_select_options
