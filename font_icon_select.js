@@ -5,6 +5,19 @@
  * Provides js that runs admin selection functionality in the black/whitelist.
  * Applied to the global form and field specific form.
  */
+ 
+Drupal.behaviors.font_icon_select = {
+	attach: function (context, settings) {
+    jQuery('.font_icon_select_options', context).once('bind_font_icon_select_handlers', function font_icon_select_options_behavior_each_anon() {
+			if (typeof console.log == "function") {console.log(this)}
+			if (typeof console.log == "function") {console.log('binding to context:')}
+			if (typeof console.log == "function") {console.log(context)}
+			if (typeof console.log == "function") {console.log(settings)}
+			
+			jQuery(this).delegate('label', 'click', default_options_onclick);
+		});
+  }
+}
 
 // Set default to unlimited.
 if (typeof Drupal.settings.font_icon_select == 'undefined') {
@@ -15,18 +28,14 @@ if (typeof Drupal.settings.font_icon_select == 'undefined') {
 
 var cardinality = Drupal.settings.font_icon_select.cardinality;
 
-// Bind onclick handlers.
-jQuery(document).ready(function(){
-  // Black/whitelist settings.
-  jQuery('div.icon_option_list_selection').delegate('label', 'click', black_white_options_onclick);
-  jQuery('div.font_icon_select_instance_options').delegate('label', 'click', default_options_onclick);
-});
 
 /**
  * Disables unchecked options once cardinality is reached.
  */
 function disable_unchecked(parent){
-  // Switched from parents('label') to parent().parent() because of
+  if (typeof console.log == "function") {console.log('disable unchecked')}
+	if (typeof console.log == "function") {console.log(parent)}
+	// Switched from parents('label') to parent().parent() because of
   // a noticeable speed increase.
   jQuery('div.selectionInner:not(.checked)', parent).parent().parent().siblings('input').attr('disabled', 'disabled');
   jQuery('div.selectionInner:not(.checked)', parent).addClass('disabled');
@@ -37,6 +46,8 @@ function disable_unchecked(parent){
  * Re-enables unchecked options after cardinality is no longer full.
  */
 function enable_unchecked(parent){
+	if (typeof console.log == "function") {console.log('enable unchecked')}
+	if (typeof console.log == "function") {console.log(parent)}
   jQuery('input.font_icon_select_options', parent).removeAttr('disabled');
   jQuery('.selectionInner', parent).removeClass('disabled');
   return true;
@@ -60,11 +71,16 @@ function default_options_onclick(e){
   }
 
   if (cardinality == 1) {
+		// Uncheck all of the other options in this field as this setting needs
+		// to behave like a set of radio buttons.
     jQuery('.font_icon_select_instance_options div.selectionInner.checked', outer_parent).each(function remove_checked_anon(){
       jQuery(this).parent().parent().siblings('.form-item').children('input').attr('checked', false);
     });
 
+		// Uncolor the recently unchecked options.
     jQuery('.font_icon_select_instance_options div.selectionInner', outer_parent).removeClass('checked');
+		
+		// Check the selected option.
     jQuery('div.selectionInner', e.currentTarget).addClass('checked');
 
     return true;
@@ -78,78 +94,20 @@ function default_options_onclick(e){
      * This can happen it the cardinality is reduced without first
      * reducing the selected defaults.
      */
-    if (cardinality == 0 || cardinality > jQuery('.font_icon_select_instance_options div.selectionInner.checked').length) {
-      return enable_unchecked(jQuery('.font_icon_select_instance_options'));
+    if (cardinality == 0 || cardinality > jQuery('.font_icon_select_instance_options div.selectionInner.checked', outer_parent).length) {
+      return enable_unchecked(jQuery('.font_icon_select_instance_options', outer_parent));
     }
     // If we have too many checked still we need to disable the item
     // that was just unchecked.
-    else if (cardinality <= jQuery('.font_icon_select_instance_options div.selectionInner.checked').length) {
-      return disable_unchecked(jQuery('.font_icon_select_instance_options'));
+    else if (cardinality <= jQuery('.font_icon_select_instance_options div.selectionInner.checked', outer_parent).length) {
+      return disable_unchecked(jQuery('.font_icon_select_instance_options', outer_parent));
     }
   }
   else {
     jQuery('div.selectionInner', e.currentTarget).addClass('checked');
-    if (cardinality > 1 && cardinality == jQuery('.font_icon_select_instance_options div.selectionInner.checked').length) {
-      return disable_unchecked(jQuery('.font_icon_select_instance_options'));
+    if (cardinality > 1 && cardinality == jQuery('.font_icon_select_instance_options div.selectionInner.checked', outer_parent).length) {
+      return disable_unchecked(jQuery('.font_icon_select_instance_options', outer_parent));
     }
     return true;
   }
-}
-
-/**
- * Onclick handler for the black/whitelist selections.
- *
- * Updates available default options.
- * Unchecks currently checked option if it becomes blacklisted.
- */
-function black_white_options_onclick(e){
-  var container = jQuery('div.icon_option_list_selection'),
-      current = jQuery(e.target).parents('.font_icon_selection_outer_wrapper'),
-      previous = jQuery('.lastSelected', container),
-      addClass = (previous.length && e.shiftKey ? jQuery('div.selectionInner', previous).hasClass('checked') : !jQuery('div.selectionInner', current).hasClass('checked')),
-      rangeItems = [];
-
-  if (e.shiftKey) {
-    if (previous.length) {
-      if (previous[0] == current[0]) {
-        return false;
-      }
-      if (current.nextAll('.lastSelected').length > 0) {
-        rangeItems = current.nextUntil('.lastSelected');
-      }
-      else {
-        // Need the class for nextUntil, dom object doesn't work until 1.6.
-        current.addClass('current');
-        rangeItems = previous.nextUntil('.current');
-        current.removeClass('current');
-      }
-    }
-
-    if (addClass) {
-      jQuery('div.selectionInner', rangeItems).addClass('checked');
-      jQuery('input', rangeItems).attr('checked', true);
-    }
-    else {
-      jQuery('div.selectionInner', rangeItems).removeClass('checked');
-      jQuery('input', rangeItems).attr('checked', false);
-    }
-  }
-
-  if (addClass) {
-    jQuery('div.selectionInner', current).addClass('checked');
-  }
-  else {
-    jQuery('div.selectionInner', current).removeClass('checked');
-  }
-
-  // Reset the 'current' selected item.
-  jQuery('.font_icon_selection_outer_wrapper', container).removeClass('lastSelected');
-  jQuery(current).addClass('lastSelected');
-
-  /*
-   * Trigger an event here in case we are in the instance settings.
-   * Instance settings js will catch the click triggered event and
-   * update defaults.
-   */
-  jQuery('div.icon_option_list_selection label').triggerHandler('black_white_option_clicked');
 }
