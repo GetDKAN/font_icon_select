@@ -8,29 +8,31 @@
 
 Drupal.behaviors.font_icon_select = {
   attach: function (context, settings) {
-    jQuery('.field-type-font-icon-select-icon', context).once('bind_font_icon_select_handlers', function font_icon_select_options_behavior_each_anon() {
-      // Defaults cardinality to 0 if it cant find the correct field name.
-      var propt,
-          cardinality = 0;
-
-      // Get the current field name from the structure.
-      for (propt in Drupal.settings.font_icon_select) {
-        // If this is a property of the font_icon_select object check if
-        // the this frame includes the named class.
-        if (Drupal.settings.font_icon_select.hasOwnProperty(propt) && jQuery(this).hasClass('field-name-' + propt.replace(/_/g, '-'))) {
-          cardinality = Drupal.settings.font_icon_select[propt].cardinality;
-        }
-      }
-
-      // Check if the field is already full and should be disabled.
-      if (cardinality > 1 && jQuery('.selectionInner.checked', this).length == cardinality) {
-        disable_unchecked(this)
-      }
-
-      // Bind the click event.
-      jQuery(this).delegate('label', 'click', {cardinality : cardinality}, default_options_onclick);
-    });
+    jQuery('.field-type-font-icon-select-icon', context).once('bind_font_icon_select_handlers', font_icon_select_options_behavior_each);
   }
+}
+
+function font_icon_select_options_behavior_each(){
+	// Defaults cardinality to 0 if it can't find the correct field name.
+	var propt,
+			cardinality = 0;
+
+	// Get the current field name from the structure.
+	for (propt in Drupal.settings.font_icon_select) {
+		// If this is a property of the font_icon_select object check if
+		// the this frame includes the named class.
+		if (Drupal.settings.font_icon_select.hasOwnProperty(propt) && jQuery(this).hasClass('field-name-' + propt.replace(/_/g, '-'))) {
+			cardinality = Drupal.settings.font_icon_select[propt].cardinality;
+		}
+	}
+
+	// Check if the field is already full and should be disabled.
+	if (cardinality > 1 && jQuery('.selectionInner.checked', this).length == cardinality) {
+		disable_unchecked(this)
+	}
+
+	// Bind the click event.
+	jQuery(this).delegate('label', 'click', {cardinality : cardinality}, default_options_onclick);
 }
 
 /**

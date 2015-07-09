@@ -235,8 +235,8 @@ function font_icon_select_field_widget_form(&$form, &$form_state, $field, $insta
           'js' => array(
             $module_path . '/font_icon_select.js',
             array(
-              'data' => array('font_icon_select' =>
-                array(
+              'data' => array(
+                'font_icon_select' => array(
                   $field['field_name'] => array(
                     'cardinality' => $field_cardinality,
                   ),
