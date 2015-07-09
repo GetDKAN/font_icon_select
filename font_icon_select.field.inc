@@ -222,7 +222,7 @@ function font_icon_select_field_widget_form(&$form, &$form_state, $field, $insta
 
       // There has to be a better way to do this...
       $options = (array) module_invoke($field['module'], 'options_list', $field, $instance, $element['#entity_type'], $element['#entity']);
-
+      $field_cardinality = $field['cardinality'] == FIELD_CARDINALITY_UNLIMITED ? 0 : $field['cardinality'];
       $element += array(
         '#attributes' => array(
           'class' => array(
@@ -235,7 +235,13 @@ function font_icon_select_field_widget_form(&$form, &$form_state, $field, $insta
           'js' => array(
             $module_path . '/font_icon_select.js',
             array(
-              'data' => array('font_icon_select' => array('cardinality' => ($field['cardinality'] == FIELD_CARDINALITY_UNLIMITED ? 0 : $field['cardinality']))),
+              'data' => array('font_icon_select' =>
+                array(
+                  $field['field_name'] => array(
+                    'cardinality' => $field_cardinality,
+                  ),
+                ),
+              ),
               'type' => 'setting',
             ),
           ),

@@ -22,9 +22,9 @@ jQuery(document).ready(function(){
 
   // Watch to see if the cardinality changes.
   jQuery('#edit-field-cardinality').bind('change', field_cardinality_onchange);
-	
-	// Black/whitelist settings.
-	jQuery('div.icon_option_list_selection', this).delegate('label', 'click', black_white_options_onclick);
+
+  // Black/whitelist settings.
+  jQuery('div.icon_option_list_selection', this).delegate('label', 'click', black_white_options_onclick);
 });
 
 /**
