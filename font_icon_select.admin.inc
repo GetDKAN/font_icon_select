@@ -285,6 +285,18 @@ function font_icon_select_font_global_blacklist_settings_form($form, &$form_stat
     '#value' => $font_id,
   );
 
+	global $base_path;
+  $module_path = drupal_get_path('module', 'font_icon_select');
+
+  // Pull the font files.
+  $entity_fids = array(
+    $entity->eot_fid,
+    $entity->svg_fid,
+    $entity->ttf_fid,
+    $entity->woff_fid,
+  );
+  $files = file_load_multiple($entity_fids);
+
   $form['font_suppression_options'] = array(
     '#type' => 'checkboxes',
     '#title' => t('Font Library Blacklist.'),
@@ -309,36 +321,27 @@ function font_icon_select_font_global_blacklist_settings_form($form, &$form_stat
               -khtml-user-select: none; /* webkit (konqueror) browsers */
               -ms-user-select: none; /* IE10+ */
             }
+            @font-face {
+              font-family: 'font_icon_select_current_font';
+              src: url('" . file_create_url($files[$entity->eot_fid]->uri) . "');
+              src: url('" . file_create_url($files[$entity->eot_fid]->uri) . "?#iefix') format('embedded-opentype'), url('" . file_create_url($files[$entity->woff_fid]->uri) . "') format('woff'), url('" . file_create_url($files[$entity->ttf_fid]->uri) . "') format('truetype'), url('" . file_create_url($files[$entity->svg_fid]->uri) . "') format('svg');
+              font-weight: normal;
+              font-style: normal;
+            }
           ",
+        ),
+        $base_path . $module_path . '/font_icon_select.css' => array(
+          'type' => 'external',
+        ),
+      ),
+      'js' => array(
+        $base_path . $module_path . '/font_icon_select.js' => array(
+          'type' => 'external',
         ),
       ),
     ),
     '#theme' => 'font_icon_select_checkboxes',
   );
-
-  // Pull the font files.
-  $entity_fids = array(
-    $entity->eot_fid,
-    $entity->svg_fid,
-    $entity->ttf_fid,
-    $entity->woff_fid,
-  );
-  $files = file_load_multiple($entity_fids);
-
-  drupal_add_css("
-    @font-face {
-      font-family: 'font_icon_select_current_font';
-      src: url('" . file_create_url($files[$entity->eot_fid]->uri) . "');
-      src: url('" . file_create_url($files[$entity->eot_fid]->uri) . "?#iefix') format('embedded-opentype'), url('" . file_create_url($files[$entity->woff_fid]->uri) . "') format('woff'), url('" . file_create_url($files[$entity->ttf_fid]->uri) . "') format('truetype'), url('" . file_create_url($files[$entity->svg_fid]->uri) . "') format('svg');
-      font-weight: normal;
-      font-style: normal;
-    }
-
-  ", array('type' => 'inline', 'scope' => 'header'));
-
-  $module_path = drupal_get_path('module', 'font_icon_select');
-  drupal_add_css($module_path . '/font_icon_select.css');
-  drupal_add_js($module_path . '/font_icon_select.js');
 
   $form['submit'] = array(
     '#type' => 'submit',
