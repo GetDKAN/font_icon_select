@@ -8,7 +8,7 @@
 
 Drupal.behaviors.font_icon_select = {
   attach: function (context, settings) {
-    jQuery('.field-type-font-icon-select-icon', context).once('bind_font_icon_select_handlers', font_icon_select_options_behavior_each);
+    //jQuery('.field-type-font-icon-select-icon', context).once('bind_font_icon_select_handlers', font_icon_select_options_behavior_each);
   }
 }
 

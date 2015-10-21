@@ -12,13 +12,15 @@
  */
 jQuery(document).ready(function(){
   if (jQuery('#edit-instance-settings-blacklist-fieldset-blacklist').length) {
-    // Fire the update to hide the black/whitelisted items.
-    update_defaults();
+    var list_container = jQuery('div.icon_option_list_selection')
+
+		// Fire the update to hide the black/whitelisted items.
+    update_defaults(false, list_container);
   
-    jQuery('#edit-instance-settings-blacklist-fieldset-blacklist input').bind('click', update_defaults)
+		// Fires when the black/whitelist toggle changes.
+    //jQuery('#edit-instance-settings-blacklist-fieldset-blacklist input').bind('click', {container: list_container}, update_defaults)
   
-    // Triggered in font_icon_select.js.
-    jQuery('div.icon_option_list_selection label').bind('black_white_option_clicked', update_defaults);
+    jQuery('div.icon_option_list_selection label').bind('click', {container: list_container}, update_defaults);
   
     // Watch to see if the cardinality changes.
     jQuery('#edit-field-cardinality').bind('change', field_cardinality_onchange);
@@ -47,21 +49,52 @@ function field_cardinality_onchange(e){
 
 /**
  * Updates the available defaults after the black/white list has changed.
+ *
+ * @arg object event.
+ *   Undefined if not passed from an event. event.data will contain a container attribute.
+ * @arg object container.
+ *   The container being updated. Unused if event is used.
  */
-function update_defaults(){
-  var whitelist = jQuery('div#edit-instance-settings-blacklist-fieldset-suppress .checked'),
-      blacklist = jQuery('div#edit-instance-settings-blacklist-fieldset-suppress .selectionInner:not(.checked)');
+function update_defaults_helper(e, container){
+	// We have 3 options, update everything (onload or black/white swap), update many things (shift click), or update one.
+	// Test everything!
+	if (typeof console.log == "function")console.log(e)
+	if (typeof e == "undefined" || e == false) {
+		jQuery('.font_icon_selection_outer_wrapper').each(function update_defaults_helper_full_each() {
+			//update_defaults(jQuery('input', this).val(), ;
+		});
+		return;
+	}
+	// Multiple here.
+	if (jQuery('.lastSelected', e.data.container).length && e.shiftKey) {
+		if (typeof console.log == "function")console.log('shift click!')
+		return;
+	}
+	
+	if (typeof console.log == "function")console.log('single click')
+	return;
+  var all_selected = jQuery('div#edit-instance-settings-blacklist-fieldset-suppress .checked');
 
-  // This is a blacklist.
+	// Black/whitelist, we dont care. Add a selected class to the appropriate Default Value items.
+	// The hide/show is dealt with in css land.
+	all_selected.each(function all_selected_each(index, element) {
+		if (typeof console.log == "function")console.log(element)
+		
+	});
+	
+	
+/* * /
   if (jQuery('#edit-instance-settings-blacklist-fieldset-blacklist-1:checked').length) {
-    jQuery('#edit-instance-settings-blacklist-fieldset-suppress').removeClass('whitelist').addClass('blacklist')
-    jQuery('.font_icon_select_instance_options .font_icon_selection_outer_wrapper').addClass('font_icon_select_hidden_element');
+    if (typeof console.log == "function")console.log('this is a blacklist')
+		jQuery('#edit-instance-settings-blacklist-fieldset-suppress').removeClass('whitelist').addClass('blacklist')
+    jQuery('.font_icon_select_instance_options .font_icon_selection_outer_wrapper').removeClass('font_icon_select_hidden_element');
     blacklist.each(function(){
-      jQuery('.font_icon_select_instance_options input[value="' + jQuery(this).parent().siblings('.label').html() + '"]').parent().removeClass('font_icon_select_hidden_element')
+      jQuery('.font_icon_select_instance_options input[value="' + jQuery(this).parent().siblings('.label').html() + '"]').parent().addClass('font_icon_select_hidden_element')
     })
   }
   // Otherwise it is a whitelist.
   else {
+		if (typeof console.log == "function")console.log('this is a whitelist')
     jQuery('#edit-instance-settings-blacklist-fieldset-suppress').removeClass('blacklist').addClass('whitelist')
     jQuery('.font_icon_select_instance_options .font_icon_selection_outer_wrapper').addClass('font_icon_select_hidden_element');
     whitelist.each(function(){
@@ -78,6 +111,11 @@ function update_defaults(){
   else {
     enable_unchecked(jQuery('.font_icon_select_instance_options'))
   }
+/* */
+}
+
+function update_defaults(value, checked) {
+	
 }
 
 /**
