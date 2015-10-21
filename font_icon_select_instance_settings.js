@@ -11,17 +11,18 @@
  * Bind click and change events.
  */
 jQuery(document).ready(function(){
-
-  // Fire the update to hide the black/whitelisted items.
-  update_defaults();
-
-  jQuery('#edit-instance-settings-blacklist-fieldset-blacklist input').bind('click', update_defaults)
-
-  // Triggered in font_icon_select.js.
-  jQuery('div.icon_option_list_selection label').bind('black_white_option_clicked', update_defaults);
-
-  // Watch to see if the cardinality changes.
-  jQuery('#edit-field-cardinality').bind('change', field_cardinality_onchange);
+  if (jQuery('#edit-instance-settings-blacklist-fieldset-blacklist').length) {
+    // Fire the update to hide the black/whitelisted items.
+    update_defaults();
+  
+    jQuery('#edit-instance-settings-blacklist-fieldset-blacklist input').bind('click', update_defaults)
+  
+    // Triggered in font_icon_select.js.
+    jQuery('div.icon_option_list_selection label').bind('black_white_option_clicked', update_defaults);
+  
+    // Watch to see if the cardinality changes.
+    jQuery('#edit-field-cardinality').bind('change', field_cardinality_onchange);
+  }
 
   // Black/whitelist settings.
   jQuery('div.icon_option_list_selection', this).delegate('label', 'click', black_white_options_onclick);

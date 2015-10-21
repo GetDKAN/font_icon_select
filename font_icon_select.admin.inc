@@ -285,7 +285,7 @@ function font_icon_select_font_global_blacklist_settings_form($form, &$form_stat
     '#value' => $font_id,
   );
 
-	global $base_path;
+  global $base_path;
   $module_path = drupal_get_path('module', 'font_icon_select');
 
   // Pull the font files.
@@ -336,6 +336,9 @@ function font_icon_select_font_global_blacklist_settings_form($form, &$form_stat
       ),
       'js' => array(
         $base_path . $module_path . '/font_icon_select.js' => array(
+          'type' => 'external',
+        ),
+        $base_path . $module_path . '/font_icon_select_instance_settings.js' => array(
           'type' => 'external',
         ),
       ),
