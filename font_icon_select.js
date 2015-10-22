@@ -8,7 +8,7 @@
 
 Drupal.behaviors.font_icon_select = {
   attach: function (context, settings) {
-    //jQuery('.field-type-font-icon-select-icon', context).once('bind_font_icon_select_handlers', font_icon_select_options_behavior_each);
+    jQuery('.field-type-font-icon-select-icon', context).once('bind_font_icon_select_handlers', font_icon_select_options_behavior_each);
   }
 }
 
@@ -73,6 +73,12 @@ function default_options_onclick(e){
   }
 
   if (cardinality == 1) {
+    // If this is the selected item remove the checked class and return, no action needed.
+    if (jQuery('.checked', e.currentTarget).length) {
+      jQuery('.selectionInner', e.currentTarget).removeClass('checked');
+      return;
+    }
+
     // Uncheck all of the other options in this field as this setting needs
     // to behave like a set of radio buttons.
     jQuery('.font_icon_select_instance_options div.selectionInner.checked', outer_parent).each(function remove_checked_anon(){
