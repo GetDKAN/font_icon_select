@@ -12,7 +12,7 @@
  */
 jQuery(document).ready(function(){
   if (jQuery('#edit-instance-settings-blacklist-fieldset-blacklist').length) {
-    var list_container = jQuery('div.icon_option_list_selection')
+    var list_container = jQuery('#edit-instance-settings-blacklist-fieldset-suppress')
 
     // Fire the update to hide the black/whitelisted items.
     update_defaults_helper(false, list_container);
@@ -20,14 +20,14 @@ jQuery(document).ready(function(){
     // Fires when the black/whitelist toggle changes.
     jQuery('#edit-instance-settings-blacklist-fieldset-blacklist input').bind('click', {container: list_container}, update_defaults_helper)
   
-    jQuery('div.icon_option_list_selection label').bind('click', {container: list_container}, update_defaults_helper);
+    jQuery('#edit-instance-settings-blacklist-fieldset-suppress label').bind('click', {container: list_container}, update_defaults_helper);
   
     // Watch to see if the cardinality changes.
     jQuery('#edit-field-cardinality').bind('change', field_cardinality_onchange);
   }
 
   // Black/whitelist settings.
-  jQuery('div.icon_option_list_selection', this).delegate('label', 'click', black_white_options_onclick);
+  jQuery('div.icon_option_list_selection').delegate('label', 'click', black_white_options_onclick);
 });
 
 /**
@@ -56,7 +56,7 @@ function field_cardinality_onchange(e){
  *   The container being updated. Unused if event is used.
  */
 function update_defaults_helper(e, container){
-  var currentTarget, rangeItems;
+  var currentTarget, rangeItems, addClass;
 
   // We have 3 options, update everything (onload or black/white swap), update many things (shift click), or update one.
   // Test everything!
@@ -72,13 +72,20 @@ function update_defaults_helper(e, container){
   // current item! Don't return here, allow the final call to fire.
   if (jQuery('.lastSelected', e.data.container).length && e.shiftKey) {
     rangeItems = get_shift_click_range(currentTarget, jQuery('.lastSelected', e.data.container))
+    addClass = jQuery('div.selectionInner', jQuery('.lastSelected', e.data.container)).hasClass('checked')
     
     rangeItems.each(function range_items_each(index, element) {
+      black_white_option_onclick(element, addClass, true)
       update_defaults(jQuery('input', element).val(), jQuery('input:checked', element).length);
     });
   }
   
-  update_defaults(jQuery('input', currentTarget).val(), jQuery('input:checked', currentTarget).length);
+  black_white_option_onclick(currentTarget, !jQuery('div.selectionInner', currentTarget).hasClass('checked'))
+  update_defaults(jQuery('input', currentTarget).val(), !jQuery('input:checked', currentTarget).length);
+
+  // Reset the 'current' selected item.
+  jQuery('.font_icon_selection_outer_wrapper', container).removeClass('lastSelected');
+  jQuery(currentTarget).addClass('lastSelected');
   return;
 /* * /
   if (jQuery('#edit-instance-settings-blacklist-fieldset-blacklist-1:checked').length) {
@@ -111,9 +118,27 @@ function update_defaults_helper(e, container){
 /* */
 }
 
+/**
+ * Update the default value options to reflect the changed black/whitelist.
+ *
+ * @arg string value
+ *   The value of the toggled input field.
+ * @arg boolean checked
+ *   Whether the toggled input is off or on.
+ */
 function update_defaults(value, checked) {
-  if (typeof console.log == "function")console.log('in update defaults with checked: ' + checked)
-  if (typeof console.log == "function")console.log(value)
+  var defaults_field, input, input_parent;
+
+  defaults_field = jQuery('#edit-field-icon-select-und');
+  input = jQuery('input[value="' + value + '"]', defaults_field);
+  input_parent = input.parent().parent();
+
+  if (checked) {
+    jQuery(input_parent).addClass('suppression_list_toggled');
+  }
+  else {
+    jQuery(input_parent).removeClass('suppression_list_toggled');
+  }
 }
 
 /**

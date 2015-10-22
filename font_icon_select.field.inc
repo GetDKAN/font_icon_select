@@ -124,7 +124,6 @@ function font_icon_select_field_instance_settings_form($field, $instance) {
       'class' => array(
         'font_icon_select_options',
         $extra_class,
-        'icon_option_list_selection',
       ),
     ),
     '#theme' => 'font_icon_select_checkboxes',
