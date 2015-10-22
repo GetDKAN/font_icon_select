@@ -76,7 +76,21 @@ function default_options_onclick(e){
     // If this is the selected item remove the checked class and return, no action needed.
     if (jQuery('.checked', e.currentTarget).length) {
       jQuery('.selectionInner', e.currentTarget).removeClass('checked');
+      // Enable any disabled checkboxes.
+      if (jQuery('.disabled', outer_parent).length) {
+        if (jQuery('.checked', outer_parent).length <= 1) {
+          enable_unchecked(jQuery('.font_icon_select_instance_options', outer_parent));
+        }
+        else {
+          disable_unchecked(jQuery('.font_icon_select_instance_options', outer_parent));
+        }
+      }
       return;
+    }
+
+    // Enable any disabled checkboxes.
+    if (jQuery('.disabled', outer_parent).length) {
+       enable_unchecked(jQuery('.font_icon_select_instance_options', outer_parent));
     }
 
     // Uncheck all of the other options in this field as this setting needs
