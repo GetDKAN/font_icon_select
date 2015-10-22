@@ -91,13 +91,13 @@ div.field-name-field-icon.invisible {
   padding: 0px !important;
 }
 
-.font_icon_select_options.blacklist .font_icon_selection_outer_wrapper.suppression_list_toggled {
+.font_icon_select_instance_options.blacklist .font_icon_selection_outer_wrapper.suppression_list_toggled {
   display: none;
 }
 
-.font_icon_select_options.whitelist .font_icon_selection_outer_wrapper {
+.font_icon_select_instance_options.whitelist .font_icon_selection_outer_wrapper {
   display:none
 }
-.font_icon_select_options.whitelist .font_icon_selection_outer_wrapper.suppression_list_toggled {
+.font_icon_select_instance_options.whitelist .font_icon_selection_outer_wrapper.suppression_list_toggled {
   display:block;
 }

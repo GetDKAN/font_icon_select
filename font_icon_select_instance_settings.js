@@ -18,8 +18,8 @@ jQuery(document).ready(function(){
     update_defaults_helper(false, list_container);
   
     // Fires when the black/whitelist toggle changes.
-    jQuery('#edit-instance-settings-blacklist-fieldset-blacklist input').bind('click', {container: list_container}, update_defaults_helper)
-  
+    jQuery('#edit-instance-settings-blacklist-fieldset-blacklist input').bind('change', update_list_type)
+
     jQuery('#edit-instance-settings-blacklist-fieldset-suppress label').bind('click', {container: list_container}, update_defaults_helper);
   
     // Watch to see if the cardinality changes.
@@ -29,6 +29,20 @@ jQuery(document).ready(function(){
   // Black/whitelist settings.
   jQuery('div.icon_option_list_selection').delegate('label', 'click', black_white_options_onclick);
 });
+
+/**
+ * Updates the type of list if the toggle has been changed. Fires update_defaults_helper.
+ */
+function update_list_type(e) {
+	var blacklist;
+	blacklist = jQuery(e.currentTarget).attr('id') == 'edit-instance-settings-blacklist-fieldset-blacklist-1';
+	if (jQuery(e.currentTarget).attr('id') == 'edit-instance-settings-blacklist-fieldset-blacklist-1') {
+		jQuery('.font_icon_select_options').removeClass('whitelist').addClass('blacklist')
+	}
+	else {
+		jQuery('.font_icon_select_options').removeClass('blacklist').addClass('whitelist')
+	}
+}
 
 /**
  * Onchange handler for cardinality selection.
