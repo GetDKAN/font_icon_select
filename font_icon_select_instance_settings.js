@@ -14,10 +14,10 @@ jQuery(document).ready(function(){
   if (jQuery('#edit-instance-settings-blacklist-fieldset-blacklist').length) {
     var list_container = jQuery('div.icon_option_list_selection')
 
-		// Fire the update to hide the black/whitelisted items.
+    // Fire the update to hide the black/whitelisted items.
     update_defaults_helper(false, list_container);
   
-		// Fires when the black/whitelist toggle changes.
+    // Fires when the black/whitelist toggle changes.
     jQuery('#edit-instance-settings-blacklist-fieldset-blacklist input').bind('click', {container: list_container}, update_defaults_helper)
   
     jQuery('div.icon_option_list_selection label').bind('click', {container: list_container}, update_defaults_helper);
@@ -56,34 +56,34 @@ function field_cardinality_onchange(e){
  *   The container being updated. Unused if event is used.
  */
 function update_defaults_helper(e, container){
-	var currentTarget, rangeItems;
+  var currentTarget, rangeItems;
 
-	// We have 3 options, update everything (onload or black/white swap), update many things (shift click), or update one.
-	// Test everything!
-	if (typeof e == "undefined" || e == false) {
-		jQuery('.font_icon_selection_outer_wrapper', container).each(function update_defaults_helper_full_each(index, element) {
-			update_defaults(jQuery('input', element).val(), jQuery('input:checked', element).length);
-		});
-		return;
-	}
-	currentTarget = jQuery(e.currentTarget).parent();
-	
-	// Multiple here. This takes care of everything in the shift click range, not including the
-	// current item! Don't return here, allow the final call to fire.
-	if (jQuery('.lastSelected', e.data.container).length && e.shiftKey) {
-		rangeItems = get_shift_click_range(currentTarget, jQuery('.lastSelected', e.data.container))
-		
-		rangeItems.each(function range_items_each(index, element) {
-			update_defaults(jQuery('input', element).val(), jQuery('input:checked', element).length);
-		});
-	}
-	
-	update_defaults(jQuery('input', currentTarget).val(), jQuery('input:checked', currentTarget).length);
-	return;
+  // We have 3 options, update everything (onload or black/white swap), update many things (shift click), or update one.
+  // Test everything!
+  if (typeof e == "undefined" || e == false) {
+    jQuery('.font_icon_selection_outer_wrapper', container).each(function update_defaults_helper_full_each(index, element) {
+      update_defaults(jQuery('input', element).val(), jQuery('input:checked', element).length);
+    });
+    return;
+  }
+  currentTarget = jQuery(e.currentTarget).parent();
+  
+  // Multiple here. This takes care of everything in the shift click range, not including the
+  // current item! Don't return here, allow the final call to fire.
+  if (jQuery('.lastSelected', e.data.container).length && e.shiftKey) {
+    rangeItems = get_shift_click_range(currentTarget, jQuery('.lastSelected', e.data.container))
+    
+    rangeItems.each(function range_items_each(index, element) {
+      update_defaults(jQuery('input', element).val(), jQuery('input:checked', element).length);
+    });
+  }
+  
+  update_defaults(jQuery('input', currentTarget).val(), jQuery('input:checked', currentTarget).length);
+  return;
 /* * /
   if (jQuery('#edit-instance-settings-blacklist-fieldset-blacklist-1:checked').length) {
     if (typeof console.log == "function")console.log('this is a blacklist')
-		jQuery('#edit-instance-settings-blacklist-fieldset-suppress').removeClass('whitelist').addClass('blacklist')
+    jQuery('#edit-instance-settings-blacklist-fieldset-suppress').removeClass('whitelist').addClass('blacklist')
     jQuery('.font_icon_select_instance_options .font_icon_selection_outer_wrapper').removeClass('font_icon_select_hidden_element');
     blacklist.each(function(){
       jQuery('.font_icon_select_instance_options input[value="' + jQuery(this).parent().siblings('.label').html() + '"]').parent().addClass('font_icon_select_hidden_element')
@@ -91,7 +91,7 @@ function update_defaults_helper(e, container){
   }
   // Otherwise it is a whitelist.
   else {
-		if (typeof console.log == "function")console.log('this is a whitelist')
+    if (typeof console.log == "function")console.log('this is a whitelist')
     jQuery('#edit-instance-settings-blacklist-fieldset-suppress').removeClass('blacklist').addClass('whitelist')
     jQuery('.font_icon_select_instance_options .font_icon_selection_outer_wrapper').addClass('font_icon_select_hidden_element');
     whitelist.each(function(){
@@ -112,8 +112,8 @@ function update_defaults_helper(e, container){
 }
 
 function update_defaults(value, checked) {
-	if (typeof console.log == "function")console.log('in update defaults with checked: ' + checked)
-	if (typeof console.log == "function")console.log(value)
+  if (typeof console.log == "function")console.log('in update defaults with checked: ' + checked)
+  if (typeof console.log == "function")console.log(value)
 }
 
 /**
@@ -129,27 +129,14 @@ function black_white_options_onclick(e){
       addClass = (previous.length && e.shiftKey ? jQuery('div.selectionInner', previous).hasClass('checked') : !jQuery('div.selectionInner', current).hasClass('checked')),
       rangeItems = [];
 
-  if (e.shiftKey) {
-    if (previous.length) {
-      rangeItems = get_shift_click_range(current, previous)
-    }
-
-    if (addClass) {
-      jQuery('div.selectionInner', rangeItems).addClass('checked');
-      jQuery('input', rangeItems).attr('checked', true);
-    }
-    else {
-      jQuery('div.selectionInner', rangeItems).removeClass('checked');
-      jQuery('input', rangeItems).attr('checked', false);
-    }
+  if (e.shiftKey && previous.length) {
+    rangeItems = get_shift_click_range(current, previous);
+    rangeItems.each(function range_items_each(index, element){
+      black_white_option_onclick(element, addClass, true)
+    });
   }
 
-  if (addClass) {
-    jQuery('div.selectionInner', current).addClass('checked');
-  }
-  else {
-    jQuery('div.selectionInner', current).removeClass('checked');
-  }
+  black_white_option_onclick(current, addClass)
 
   // Reset the 'current' selected item.
   jQuery('.font_icon_selection_outer_wrapper', container).removeClass('lastSelected');
@@ -164,24 +151,51 @@ function black_white_options_onclick(e){
 }
 
 /**
+ * Toggles checked class and checked status if toggle flag is set.
+ *
+ * @arg object element.
+ *   The DOM object to update.
+ * @arg boolean addClass.
+ *   Flag that determines if an element's class should be turned on or off.
+ * @arg boolean toggle.
+ *   Flag that determines if an element's checkbox should be toggled. Used during shift click opps.
+ */
+function black_white_option_onclick(element, addClass, toggle) {
+  toggle = typeof toggle == "undefined" ? false : true;
+
+  if (addClass) {
+    jQuery('div.selectionInner', element).addClass('checked');
+    if (toggle) {
+      jQuery('input', element).attr('checked', true);
+    }
+    return;
+  }
+  
+  jQuery('div.selectionInner', element).removeClass('checked');
+  if (toggle) {
+    jQuery('input', element).attr('checked', false);
+  }
+}
+
+/**
  * returns all elements between the element just clicked and the one previously clicked.
  */ 
 function get_shift_click_range(current, previous) {
-	var rangeItems = [];
+  var rangeItems = [];
 
-	if (previous[0] == current[0]) {
-		return rangeItems;
-	}
+  if (previous[0] == current[0]) {
+    return rangeItems;
+  }
 
-	if (current.nextAll('.lastSelected').length > 0) {
-		rangeItems = current.nextUntil('.lastSelected');
-	}
-	else {
-		// Need the class for nextUntil, dom object doesn't work until 1.6.
-		current.addClass('current');
-		rangeItems = previous.nextUntil('.current');
-		current.removeClass('current');
-	}
-	
-	return rangeItems;
+  if (current.nextAll('.lastSelected').length > 0) {
+    rangeItems = current.nextUntil('.lastSelected');
+  }
+  else {
+    // Need the class for nextUntil, dom object doesn't work until 1.6.
+    current.addClass('current');
+    rangeItems = previous.nextUntil('.current');
+    current.removeClass('current');
+  }
+  
+  return rangeItems;
 }
