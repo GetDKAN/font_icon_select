@@ -226,7 +226,7 @@ function font_icon_select_field_widget_form(&$form, &$form_state, $field, $insta
         '#attributes' => array(
           'class' => array(
             'font_icon_select_options',
-            'whitelist',
+            ($instance['settings']['blacklist_fieldset']['blacklist'] == 0 ? 'whitelist' : 'blacklist'),
             'font_icon_select_instance_options',
           ),
         ),
