@@ -15,12 +15,12 @@ jQuery(document).ready(function(){
     var list_container = jQuery('div.icon_option_list_selection')
 
 		// Fire the update to hide the black/whitelisted items.
-    update_defaults(false, list_container);
+    update_defaults_helper(false, list_container);
   
 		// Fires when the black/whitelist toggle changes.
-    //jQuery('#edit-instance-settings-blacklist-fieldset-blacklist input').bind('click', {container: list_container}, update_defaults)
+    jQuery('#edit-instance-settings-blacklist-fieldset-blacklist input').bind('click', {container: list_container}, update_defaults_helper)
   
-    jQuery('div.icon_option_list_selection label').bind('click', {container: list_container}, update_defaults);
+    jQuery('div.icon_option_list_selection label').bind('click', {container: list_container}, update_defaults_helper);
   
     // Watch to see if the cardinality changes.
     jQuery('#edit-field-cardinality').bind('change', field_cardinality_onchange);
@@ -56,33 +56,30 @@ function field_cardinality_onchange(e){
  *   The container being updated. Unused if event is used.
  */
 function update_defaults_helper(e, container){
+	var currentTarget, rangeItems;
+
 	// We have 3 options, update everything (onload or black/white swap), update many things (shift click), or update one.
 	// Test everything!
-	if (typeof console.log == "function")console.log(e)
 	if (typeof e == "undefined" || e == false) {
-		jQuery('.font_icon_selection_outer_wrapper').each(function update_defaults_helper_full_each() {
-			//update_defaults(jQuery('input', this).val(), ;
+		jQuery('.font_icon_selection_outer_wrapper', container).each(function update_defaults_helper_full_each(index, element) {
+			update_defaults(jQuery('input', element).val(), jQuery('input:checked', element).length);
 		});
 		return;
 	}
-	// Multiple here.
+	currentTarget = jQuery(e.currentTarget).parent();
+	
+	// Multiple here. This takes care of everything in the shift click range, not including the
+	// current item! Don't return here, allow the final call to fire.
 	if (jQuery('.lastSelected', e.data.container).length && e.shiftKey) {
-		if (typeof console.log == "function")console.log('shift click!')
-		return;
+		rangeItems = get_shift_click_range(currentTarget, jQuery('.lastSelected', e.data.container))
+		
+		rangeItems.each(function range_items_each(index, element) {
+			update_defaults(jQuery('input', element).val(), jQuery('input:checked', element).length);
+		});
 	}
 	
-	if (typeof console.log == "function")console.log('single click')
+	update_defaults(jQuery('input', currentTarget).val(), jQuery('input:checked', currentTarget).length);
 	return;
-  var all_selected = jQuery('div#edit-instance-settings-blacklist-fieldset-suppress .checked');
-
-	// Black/whitelist, we dont care. Add a selected class to the appropriate Default Value items.
-	// The hide/show is dealt with in css land.
-	all_selected.each(function all_selected_each(index, element) {
-		if (typeof console.log == "function")console.log(element)
-		
-	});
-	
-	
 /* * /
   if (jQuery('#edit-instance-settings-blacklist-fieldset-blacklist-1:checked').length) {
     if (typeof console.log == "function")console.log('this is a blacklist')
@@ -115,7 +112,8 @@ function update_defaults_helper(e, container){
 }
 
 function update_defaults(value, checked) {
-	
+	if (typeof console.log == "function")console.log('in update defaults with checked: ' + checked)
+	if (typeof console.log == "function")console.log(value)
 }
 
 /**
@@ -133,18 +131,7 @@ function black_white_options_onclick(e){
 
   if (e.shiftKey) {
     if (previous.length) {
-      if (previous[0] == current[0]) {
-        return false;
-      }
-      if (current.nextAll('.lastSelected').length > 0) {
-        rangeItems = current.nextUntil('.lastSelected');
-      }
-      else {
-        // Need the class for nextUntil, dom object doesn't work until 1.6.
-        current.addClass('current');
-        rangeItems = previous.nextUntil('.current');
-        current.removeClass('current');
-      }
+      rangeItems = get_shift_click_range(current, previous)
     }
 
     if (addClass) {
@@ -174,4 +161,27 @@ function black_white_options_onclick(e){
    * update defaults.
    */
   jQuery('div.icon_option_list_selection label').triggerHandler('black_white_option_clicked');
+}
+
+/**
+ * returns all elements between the element just clicked and the one previously clicked.
+ */ 
+function get_shift_click_range(current, previous) {
+	var rangeItems = [];
+
+	if (previous[0] == current[0]) {
+		return rangeItems;
+	}
+
+	if (current.nextAll('.lastSelected').length > 0) {
+		rangeItems = current.nextUntil('.lastSelected');
+	}
+	else {
+		// Need the class for nextUntil, dom object doesn't work until 1.6.
+		current.addClass('current');
+		rangeItems = previous.nextUntil('.current');
+		current.removeClass('current');
+	}
+	
+	return rangeItems;
 }
