@@ -34,14 +34,14 @@ jQuery(document).ready(function(){
  * Updates the type of list if the toggle has been changed. Fires update_defaults_helper.
  */
 function update_list_type(e) {
-	var blacklist;
-	blacklist = jQuery(e.currentTarget).attr('id') == 'edit-instance-settings-blacklist-fieldset-blacklist-1';
-	if (jQuery(e.currentTarget).attr('id') == 'edit-instance-settings-blacklist-fieldset-blacklist-1') {
-		jQuery('.font_icon_select_options').removeClass('whitelist').addClass('blacklist')
-	}
-	else {
-		jQuery('.font_icon_select_options').removeClass('blacklist').addClass('whitelist')
-	}
+  var blacklist;
+  blacklist = jQuery(e.currentTarget).attr('id') == 'edit-instance-settings-blacklist-fieldset-blacklist-1';
+  if (jQuery(e.currentTarget).attr('id') == 'edit-instance-settings-blacklist-fieldset-blacklist-1') {
+    jQuery('.font_icon_select_options').removeClass('whitelist').addClass('blacklist')
+  }
+  else {
+    jQuery('.font_icon_select_options').removeClass('blacklist').addClass('whitelist')
+  }
 }
 
 /**
@@ -101,35 +101,6 @@ function update_defaults_helper(e, container){
   jQuery('.font_icon_selection_outer_wrapper', container).removeClass('lastSelected');
   jQuery(currentTarget).addClass('lastSelected');
   return;
-/* * /
-  if (jQuery('#edit-instance-settings-blacklist-fieldset-blacklist-1:checked').length) {
-    if (typeof console.log == "function")console.log('this is a blacklist')
-    jQuery('#edit-instance-settings-blacklist-fieldset-suppress').removeClass('whitelist').addClass('blacklist')
-    jQuery('.font_icon_select_instance_options .font_icon_selection_outer_wrapper').removeClass('font_icon_select_hidden_element');
-    blacklist.each(function(){
-      jQuery('.font_icon_select_instance_options input[value="' + jQuery(this).parent().siblings('.label').html() + '"]').parent().addClass('font_icon_select_hidden_element')
-    })
-  }
-  // Otherwise it is a whitelist.
-  else {
-    if (typeof console.log == "function")console.log('this is a whitelist')
-    jQuery('#edit-instance-settings-blacklist-fieldset-suppress').removeClass('blacklist').addClass('whitelist')
-    jQuery('.font_icon_select_instance_options .font_icon_selection_outer_wrapper').addClass('font_icon_select_hidden_element');
-    whitelist.each(function(){
-      jQuery('.font_icon_select_instance_options input[value="' + jQuery(this).parent().siblings('.label').html() + '"]').parent().removeClass('font_icon_select_hidden_element')
-    })
-  }
-
-  // Uncheck all hidden boxes.
-  jQuery('.font_icon_select_instance_options .font_icon_selection_outer_wrapper.font_icon_select_hidden_element .checked').click();
-
-  if (Drupal.settings.font_icon_select.cardinality != 1 && Drupal.settings.font_icon_select.cardinality <= jQuery('.font_icon_select_instance_options .checked').length) {
-    disable_unchecked(jQuery('.font_icon_select_instance_options'))
-  }
-  else {
-    enable_unchecked(jQuery('.font_icon_select_instance_options'))
-  }
-/* */
 }
 
 /**
@@ -141,17 +112,26 @@ function update_defaults_helper(e, container){
  *   Whether the toggled input is off or on.
  */
 function update_defaults(value, checked) {
-  var defaults_field, input, input_parent;
+  var defaults_field, input, input_parent, blacklist;
 
   defaults_field = jQuery('#edit-field-icon-select-und');
   input = jQuery('input[value="' + value + '"]', defaults_field);
   input_parent = input.parent().parent();
+  blacklist = jQuery(defaults_field).hasClass('blacklist');
 
   if (checked) {
     jQuery(input_parent).addClass('suppression_list_toggled');
+    // Uncheck the element as it is hidden.
+    if (blacklist && jQuery(input).is(':checked')) {
+      jQuery('label', input_parent).click();
+    }
   }
   else {
     jQuery(input_parent).removeClass('suppression_list_toggled');
+    // Uncheck the element as it is hidden.
+    if (!blacklist && jQuery(input).is(':checked')) {
+      jQuery('label', input_parent).click();
+    }
   }
 }
 
