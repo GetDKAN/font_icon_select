@@ -344,3 +344,41 @@ function font_icon_select_field_formatter_view($entity_type, $entity, $field, $i
 
   return $result;
 }
+
+/**
+ * Themes a set of icon select checkboxes.
+ *
+ * @param array $vars
+ *   Contains element to be themed.
+ */
+function theme_font_icon_select_checkboxes(array $vars) {
+  $element = $vars['element'];
+
+  $element['#default_value'] = is_array($element['#default_value']) ? $element['#default_value'] : array($element['#default_value']);
+
+  $output = array();
+
+  foreach ($element['#options'] as $key => $value) {
+    $input_options = array(
+      '#type' => 'checkbox',
+      '#name' => $element['#name'] . '[]',
+      '#attributes' => array(
+        'value' => $key,
+      ),
+      '#id' => $element['#id'] . '-' . $key,
+    );
+    if (in_array($key, $element['#default_value'])) {
+      $input_options['#attributes']['checked'] = 'checked';
+    }
+
+    $current_element = array(
+      'key' => $key,
+      'value' => $value,
+      'field' => drupal_render($input_options),
+      'checked' => in_array($key, $element['#default_value']),
+      'element_id' => $element['#id'],
+    );
+    $output[] = theme(array('font_icon_select_checkbox'), array('element' => $current_element));
+  }
+  return implode("\n", $output);
+}
