@@ -2,6 +2,10 @@ div.font_icon_select_options {
   font-family: 'font_icon_select_current_font';
   overflow-y: scroll;
   border: 2px solid #ececec;
+  max-height: 250px;
+}
+div.font_icon_select_options.restrict_list {
+  max-height: none;
 }
 div.font_icon_select_options input[type="checkbox"],
 div.font_icon_select_options input[type="radio"] {
